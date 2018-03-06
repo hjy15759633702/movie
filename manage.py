@@ -5,3 +5,4 @@
 # @File    : manage.py 入口函数
 
 print('hello!')
+print('hello!')
