@@ -1,92 +1,25 @@
-<!doctype html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="renderer" content="webkit">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1 , user-scalable=no">
-    <title>微电影</title>
-    <link rel="shortcut icon" href="../static/base/images/logo.png">
-    <link rel="stylesheet" href="../static/base/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../static/base/css/bootstrap-movie.css">
-    <link rel="stylesheet" href="../static/base/css/animate.css">
-    <!--播放页面-->
-    <link rel="stylesheet" type="text/css" href="../static/jwplayer/skins/stormtrooper.css">
-    <script type="text/javascript" src="../static/ueditor/ueditor.config.js"></script>
-    <script type="text/javascript" src="../static/ueditor/ueditor.all.js"></script>
-    <script type="text/javascript" src="../static/ueditor/lang/zh-cn/zh-cn.js"></script>
-    <script>
-        SyntaxHighlighter.all();
-    </script>
-    <!--播放页面-->
-    <style>
-        .navbar-brand>img {
-            display: inline;
-        }
-        .media{
-            padding:3px;
-            border:1px solid #ccc
-        }
-        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9{
-            padding-right: 3px;
-            padding-left: 3px;
-        }
-    </style>
-</head>
+{% extends 'home/home.html'%}
 
-<body>
-<!--导航-->
-<nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container">
-        <!--小屏幕导航按钮和logo-->
-        <div class="navbar-header">
-            <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a href="index.html" class="navbar-brand" style="width:250px;">
-                <img src="../static/base/images/logo.png" style="height:30px;">&nbsp;微电影
-            </a>
-        </div>
-        <!--小屏幕导航按钮和logo-->
-        <!--导航-->
-        <div class="navbar-collapse collapse">
-            <form class="navbar-form navbar-left" role="search" style="margin-top:18px;">
-                <div class="form-group input-group">
-                    <input type="text" class="form-control" placeholder="请输入电影名！">
-                    <span class="input-group-btn">
-                        <a class="btn btn-default" href="search.html"><span class="glyphicon glyphicon-search"></span>&nbsp;搜索</a>
-                    </span>
-                </div>
-            </form>
-            <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <a class="curlink" href="index.html"><span class="glyphicon glyphicon-film"></span>&nbsp;电影</a>
-                </li>
-                <li>
-                    <a class="curlink" href="login.html"><span class="glyphicon glyphicon-log-in"></span>&nbsp;登录</a>
-                </li>
-                <li>
-                    <a class="curlink" href="register.html"><span class="glyphicon glyphicon-plus"></span>&nbsp;注册</a>
-                </li>
-                <li>
-                    <a class="curlink" href="logout.html"><span class="glyphicon glyphicon-log-out"></span>&nbsp;退出</a>
-                </li>
-                <li>
-                    <a class="curlink" href="user.html"><span class="glyphicon glyphicon-user"></span>&nbsp;会员</a>
-                </li>
-            </ul>
-        </div>
-        <!--导航-->
+{% block css %}
+<!--播放页面-->
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='jwplayer/skins/stormtrooper.css') }}">
+<script type="text/javascript" src="{{ url_for('static',filename='ueditor/ueditor.config.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static',filename='ueditor/ueditor.all.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static',filename='ueditor/lang/zh-cn/zh-cn.js') }}"></script>
+<script>
+    SyntaxHighlighter.all();
+</script>
+<!--播放页面-->
+<style>
+    .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9{
+        padding-right: 3px;
+        padding-left: 3px;
+    }
+</style>
+{% endblock %}
 
-    </div>
-</nav>
-<!--导航-->
-<!--内容-->
-<div class="container" style="margin-top:76px">
-    <div class="row">
+{% block content %}
+<div class="row">
         <div class="col-md-8">
             <div id="moviecontainer"></div>
         </div>
@@ -321,27 +254,8 @@
             </div>
         </div>
     </div>
-</div>
-<!--内容-->
-<!--底部-->
-<footer>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <p>
-                    ©&nbsp;2017&nbsp;flaskmovie.imooc.com&nbsp;京ICP备 13046642号-2
-                </p>
-            </div>
-        </div>
-    </div>
-</footer>
-<!--底部-->
-<script src="../static/base/js/jquery.min.js"></script>
-<script src="../static/base/js/bootstrap.min.js"></script>
-<script src="../static/base/js/jquery.singlePageNav.min.js"></script>
-<script src="../static/base/js/wow.min.js"></script>
-<script src="../static/lazyload/jquery.lazyload.min.js"></script>
-<script src="//cdn.bootcss.com/holder/2.9.4/holder.min.js"></script>
+{% endblock %}
+{% block js %}
 <!--播放页面-->
 <script src="../static/jwplayer/jwplayer.js"></script>
 <script>
@@ -358,16 +272,16 @@ var ue = UE.getEditor('input_content',{
 </script>
 <script type="text/javascript">
 	jwplayer("moviecontainer").setup({
-		flashplayer: "../static/jwplayer/jwplayer.flash.swf",
+		flashplayer: "{{ url_for('static',filename='jwplayer/jwplayer.flash.swf') }}",
 		playlist: [{
-			file: "../static/video/htpy.mp4",
+			file: "{{ url_for('static',filename='video/htpy.mp4') }}",
 			title: "环太平洋"
 		}],
 		modes: [{
 			type: "html5"
 		}, {
 			type: "flash",
-			src: "../static/jwplayer/jwplayer.flash.swf"
+			src: "{{ url_for('static',filename='jwplayer/jwplayer.flash.swf') }}"
 		}, {
 			type: "download"
 		}],
@@ -381,17 +295,4 @@ var ue = UE.getEditor('input_content',{
 	});
 </script>
 <!--播放页面-->
-<script>
-    $(function() {
-        new WOW().init();
-    })
-</script>
-<script>
-    $(document).ready(function() {
-        $("img.lazy").lazyload({
-            effect: "fadeIn"
-        });
-    });
-</script>
-</body>
-</html>
+{% endblock %}

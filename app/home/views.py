@@ -32,6 +32,7 @@ def logout():
 def regist():
     return render_template('home/regist.html')
 
+
 # 会员中心
 @homes.route("/user/")
 def user():
@@ -42,6 +43,7 @@ def user():
 @homes.route("/pwd/")
 def pwd():
     return render_template('home/pwd.html')
+
 
 # 评论
 @homes.route("/comments/")
@@ -54,17 +56,26 @@ def comments():
 def loginlog():
     return render_template('home/loginlog.html')
 
+
 # 电影收藏
 @homes.route("/moviecol/")
 def moviecol():
     return render_template('home/moviecol.html')
+
 
 # 动画
 @homes.route("/animation/")
 def animation():
     return render_template('home/animation.html')
 
+
 # 搜索
 @homes.route("/search/")
 def search():
     return render_template('home/search.html')
+
+
+# 电影播放
+@homes.route("/play/")
+def play():
+    return render_template('home/play.html')
