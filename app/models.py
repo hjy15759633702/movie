@@ -5,24 +5,9 @@
 # @Software  ：PyCharm
 # @Detial    ：数据模块models
 
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from app import db
 import pymysql
 from datetime import datetime
-
-HOSTNAME = '127.0.0.1'
-PORT = '3306'
-DATABASE = 'movie'
-USERNAME = 'root'
-PASSWORD = 'hjy'
-DB_URI = 'mysql+pymysql://{}:{}@{}:{}/{}?charset=utf8'.format(USERNAME, PASSWORD, HOSTNAME, PORT, DATABASE)
-
-app = Flask(__name__)
-
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:hjy@127.0.0.1:3306/movie?charset=utf8"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
-
-db = SQLAlchemy(app)
 
 
 # 会员
@@ -178,6 +163,10 @@ class Admin(db.Model):
 
     def __repr__(self):
         return "<Admin %r>" % self.name
+
+    def check_pwd(self, pwd):
+        from werkzeug.security import check_password_hash
+        return check_password_hash(self.pwd, pwd)
 
 
 # 管理员登录日志
