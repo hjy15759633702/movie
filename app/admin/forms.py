@@ -6,9 +6,12 @@
 # @Detial    ：管理员表单
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
+from wtforms import StringField, SubmitField, PasswordField, FileField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, ValidationError
-from app.models import Admin
+from app.models import Admin, Tag
+
+# 查询所有标签
+tags = Tag.query.all()
 
 
 # 管理员登录表单
@@ -75,17 +78,111 @@ class TagForm(FlaskForm):
     )
 
 
-# 添加标签表单
-class TagSearchForm(FlaskForm):
-    '''搜索标签表单'''
-    key = StringField(
+# 添加电影表单
+class MovieForm(FlaskForm):
+    '''添加电影表单'''
+    title = StringField(
+        label="片名",
+        validators=[
+            DataRequired("请输入片名！")
+        ],
+        description="片名",
         render_kw={
-            "class": "form-control pull-right",
-            "placeholder": "请输入关键字...",
+            "class": "form-control",
+            "placeholder": "请输入片名",
+            "id": "input_title"
         }
     )
-    search = SubmitField(
-        "编辑",
+    url = FileField(
+        label="文件",
+        validators=[
+            DataRequired("请上传文件！")
+        ],
+        description="文件"
+    )
+    info = TextAreaField(
+        label="简介",
+        validators=[
+            DataRequired("请输入简介！")
+        ],
+        description="简介",
+        render_kw={
+            "class": "form-control",
+            "rows": "10",
+            "id": "input_info"
+        }
+    )
+    logo = FileField(
+        label="封面",
+        validators=[
+            DataRequired("请上传封面！")
+        ],
+        description="封面"
+    )
+    star = SelectField(
+        label="星级",
+        validators=[
+            DataRequired("请选择星级！")
+        ],
+        coerce=int,
+        choices=[(1, "1星"), (2, "2星"), (3, "3星"), (4, "4星"), (5, "5星")],
+        description="星级",
+        render_kw={
+            "class": "form-control",
+            "id": "input_star"
+        }
+    )
+    tag_id = SelectField(
+        label="标签",
+        validators=[
+            DataRequired("请选择标签！")
+        ],
+        coerce=int,
+        choices=[(v.id, v.name) for v in tags],
+        description="标签",
+        render_kw={
+            "class": "form-control",
+            "id": "input_tag_id"
+        }
+    )
+    area = StringField(
+        label="地区",
+        validators=[
+            DataRequired("请输入地区！")
+        ],
+        description="地区",
+        render_kw={
+            "class": "form-control",
+            "placeholder": "请输入地区",
+            "id": "input_area"
+        }
+    )
+    length = StringField(
+        label="片长",
+        validators=[
+            DataRequired("请输入片长！")
+        ],
+        description="片长",
+        render_kw={
+            "class": "form-control",
+            "placeholder": "请输入片长",
+            "id": "input_length"
+        }
+    )
+    release_time = StringField(
+        label="上映时间",
+        validators=[
+            DataRequired("请输入上映时间！")
+        ],
+        description="上映时间",
+        render_kw={
+            "class": "form-control",
+            "placeholder": "请输入上映时间",
+            "id": "input_release_time"
+        }
+    )
+    submit = SubmitField(
+        "添加",
         render_kw={
             "class": "btn btn-primary"
         }
