@@ -7,9 +7,10 @@
 
 from . import admins
 from flask import render_template, redirect, url_for, flash, session, request
-from app.admin.forms import LoginForm
-from app.models import Admin
+from app.admin.forms import LoginForm, TagForm
+from app.models import Admin, Tag
 from functools import wraps
+from app import db
 
 
 # 验证是否处于登录
@@ -59,18 +60,84 @@ def pwd():
     return render_template('admin/pwd.html')
 
 
-# 编辑标签
-@admins.route("/tag/add/")
+# 添加标签
+@admins.route("/tag/add/", methods=['POST', 'GET'])
 @admin_login_req
 def tag_add():
-    return render_template('admin/tag_add.html')
+    form = TagForm()
+    if form.validate_on_submit():
+        data = form.data
+        tag_count = Tag.query.filter_by(name=data['name']).count()
+        if tag_count == 1:
+            flash("标签已经存在！", 'err')
+            return redirect(url_for("admin.tag_add"))
+        tag = Tag(
+            name=data['name']
+        )
+        db.session.add(tag)
+        db.session.commit()
+        flash("添加标签成功！", 'ok')
+        return redirect(url_for("admin.tag_add"))
+    return render_template('admin/tag_add.html', form=form)
 
 
 # 标签列表
-@admins.route("/tag/list/")
+@admins.route("/tag/list/<int:page>/", methods=['GET'])
 @admin_login_req
-def tag_list():
-    return render_template('admin/tag_list.html')
+def tag_list(page=None):
+    if page is None:
+        page = 1
+    page_data = Tag.query.order_by(
+        Tag.addtime.desc()
+    ).paginate(page=page, per_page=10)
+    return render_template('admin/tag_list.html', page_data=page_data)
+
+
+# 标签删除
+@admins.route("/tag/del/<int:id>/", methods=['GET'])
+@admin_login_req
+def tag_del(id=None):
+    tag = Tag.query.filter_by(id=id).first_or_404()
+    db.session.delete(tag)
+    db.session.commit()
+    flash("标签删除成功！", 'ok')
+    return redirect(url_for("admin.tag_list", page=1))
+
+
+# 编辑标签
+@admins.route("/tag/edit/<int:id>/", methods=['POST', 'GET'])
+@admin_login_req
+def tag_edit(id=None):
+    form = TagForm()
+    tag = Tag.query.get_or_404(id)
+    if form.validate_on_submit():
+        data = form.data
+        tag_count = Tag.query.filter_by(name=data['name']).count()
+        if tag.name != data['name'] and tag_count == 1:
+            flash("标签已经存在！", 'err')
+            return redirect(url_for("admin.tag_edit", id=id))
+        tag.name = data['name']
+        db.session.add(tag)
+        db.session.commit()
+        flash("修改标签成功！", 'ok')
+        return redirect(url_for("admin.tag_edit", id=id))
+    return render_template('admin/tag_edit.html', form=form, tag=tag)
+
+
+# 标签搜索
+@admins.route("/tag/search/<int:page>/", methods=['GET'])
+@admin_login_req
+def tag_search(page=None):
+    if page is None:
+        page = 1
+    key = request.args.get('key', "")
+    print(str(key))
+    page_data = Tag.query.filter(
+        Tag.name.ilike('%' + key + "%")
+    ).query.order_by(
+        Tag.addtime.desc()
+    ).paginate(page=page, per_page=10)
+    return render_template('admin/tag_list.html', page_data=page_data)
 
 
 # 编辑电影

@@ -23,7 +23,7 @@ class LoginForm(FlaskForm):
         render_kw={
             "class": "form-control",
             "placeholder": "请输入账号",
-            #"required": "required"
+            # "required": "required"
         }
     )
     pwd = PasswordField(
@@ -35,7 +35,7 @@ class LoginForm(FlaskForm):
         render_kw={
             "class": "form-control",
             "placeholder": "请输入密码",
-            #"required": "required"
+            # "required": "required"
         }
     )
     submit = SubmitField(
@@ -50,3 +50,43 @@ class LoginForm(FlaskForm):
         admin = Admin.query.filter_by(name=account).count()
         if admin == 0:
             raise ValidationError('账号不存在！')
+
+
+# 添加标签表单
+class TagForm(FlaskForm):
+    '''添加标签表单'''
+    name = StringField(
+        label="标签名称",
+        validators=[
+            DataRequired("请输入标签！")
+        ],
+        description="标签",
+        render_kw={
+            "class": "form-control",
+            "placeholder": "请输入标签名称",
+            "id": "input_name"
+        }
+    )
+    submit = SubmitField(
+        "编辑",
+        render_kw={
+            "class": "btn btn-primary"
+        }
+    )
+
+
+# 添加标签表单
+class TagSearchForm(FlaskForm):
+    '''搜索标签表单'''
+    key = StringField(
+        render_kw={
+            "class": "form-control pull-right",
+            "placeholder": "请输入关键字...",
+        }
+    )
+    search = SubmitField(
+        "编辑",
+        render_kw={
+            "class": "btn btn-primary"
+        }
+    )
