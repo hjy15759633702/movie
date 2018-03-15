@@ -7,8 +7,8 @@
 
 from . import admins
 from flask import render_template, redirect, url_for, flash, session, request
-from app.admin.forms import LoginForm, TagForm, MovieForm
-from app.models import Admin, Tag, Movie
+from app.admin.forms import LoginForm, TagForm, MovieForm, PreviewForm
+from app.models import Admin, Tag, Movie, Preview
 from functools import wraps
 from app import db, app
 import os
@@ -246,14 +246,14 @@ def movie_edit(id=None):
             os.makedirs(app.config["UP_DIR"])
             os.chmod(app.config["UP_DIR"], "rw")
 
-        if form.url.data.filename != "":
+        if form.url.data != "":
             file_url = str(form.url.data.filename)
             # 删除原来资源
             file_del(movie.url)
             movie.url = change_filename(file_url)
             form.url.data.save(app.config["UP_DIR"] + movie.url)
 
-        if form.logo.data.filename != "":
+        if form.logo.data != "":
             file_logo = str(form.logo.data.filename)
             # 删除原来资源
             file_del(movie.logo)
@@ -274,18 +274,119 @@ def movie_edit(id=None):
     return render_template('admin/movie_edit.html', form=form, movie=movie)
 
 
-# 编辑上映预告
-@admins.route("/preview/add/")
+# 电影搜索
+@admins.route("/movie/search/<int:page>/", methods=['GET'])
+@admin_login_req
+def movie_search(page=None):
+    if page is None:
+        page = 1
+    key = request.args.get('key', "")
+    page_data = Movie.query.join(Tag).filter(
+        Movie.tag_id == Tag.id,
+        Movie.title.ilike('%' + key + "%")
+    ).order_by(
+        Movie.addtime.desc()
+    ).paginate(page=page, per_page=10)
+    return render_template('admin/movie_list.html', page_data=page_data)
+
+
+# 添加上映预告
+@admins.route("/preview/add/", methods=['POST', 'GET'])
 @admin_login_req
 def preview_add():
-    return render_template('admin/preview_add.html')
+    form = PreviewForm()
+    if form.validate_on_submit():
+        data = form.data
+        file_logo = str(form.logo.data.filename)
+        if not os.path.exists(app.config["UP_DIR"]):
+            os.makedirs(app.config["UP_DIR"])
+            os.chmod(app.config["UP_DIR"], "rw")
+        logo = change_filename(file_logo)
+        form.logo.data.save(app.config["UP_DIR"] + logo)
+        preview = Preview(
+            logo=logo,
+            title=data['title']
+        )
+        db.session.add(preview)
+        db.session.commit()
+        flash("电影上映预告添加成功！", 'ok')
+        return redirect(url_for('admin.preview_add'))
+    return render_template('admin/preview_add.html', form=form)
 
 
 # 上映预告列表
-@admins.route("/preview/list/")
+@admins.route("/preview/list/<int:page>/", methods=['GET'])
 @admin_login_req
-def preview_list():
-    return render_template('admin/preview_list.html')
+def preview_list(page=None):
+    if page is None:
+        page = 1
+    page_data = Preview.query.order_by(
+        Preview.addtime.desc()
+    ).paginate(page=page, per_page=10)
+    return render_template('admin/preview_list.html', page_data=page_data)
+
+
+# 上映预告搜索
+@admins.route("/preview/search/<int:page>/", methods=['GET'])
+@admin_login_req
+def preview_search(page=None):
+    if page is None:
+        page = 1
+    key = request.args.get('key', "")
+    page_data = Preview.query.filter(
+        Preview.title.ilike('%' + key + "%")
+    ).order_by(
+        Preview.addtime.desc()
+    ).paginate(page=page, per_page=10)
+    return render_template('admin/preview_list.html', page_data=page_data)
+
+
+# 上映预告删除
+@admins.route("/preview/del/<int:id>/", methods=['GET'])
+@admin_login_req
+def preview_del(id=None):
+    preview = Preview.query.filter_by(id=id).first_or_404()
+    db.session.delete(preview)
+    db.session.commit()
+    # 删除文件
+    file_del(preview.logo)
+    flash("电影上映预告删除成功！", 'ok')
+    return redirect(url_for("admin.preview_list", page=1))
+
+
+# 编辑上映预告
+@admins.route("/preview/edit/<int:id>/", methods=['POST', 'GET'])
+@admin_login_req
+def preview_edit(id=None):
+    form = PreviewForm()
+    # 编辑之前logo是存在的，所以不做过滤。
+    form.logo.validators = []
+    preview = Preview.query.get_or_404(int(id))
+    if form.validate_on_submit():
+        data = form.data
+        preview_count = Preview.query.filter_by(title=data['title']).count()
+        if preview_count == 1 and preview.title != data['title']:
+            flash("预告标题已经存在！", 'err')
+            return redirect(url_for("admin.preview_edit", id=id))
+
+        # 判断文件并且创建文件
+        if not os.path.exists(app.config["UP_DIR"]):
+            os.makedirs(app.config["UP_DIR"])
+            os.chmod(app.config["UP_DIR"], "rw")
+
+        if form.logo.data != "":
+            file_logo = str(form.logo.data.filename)
+            # 删除原来资源
+            file_del(preview.logo)
+            preview.logo = change_filename(file_logo)
+            form.logo.data.save(app.config["UP_DIR"] + preview.logo)
+
+        preview.title = data['title']
+        db.session.add(preview)
+        db.session.commit()
+        flash("编辑电影上映预告成功！", 'ok')
+        return redirect(url_for("admin.preview_edit", id=id))
+    return render_template('admin/preview_edit.html', form=form, preview=preview)
 
 
 # 会员列表
