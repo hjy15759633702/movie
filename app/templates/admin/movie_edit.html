@@ -69,7 +69,7 @@
                                 <font style="color: red; font-size: 10px">{{ err }}</font>
                             </div>
                             {% endfor %}
-                            <img src="{{ url_for('static',filename='uploads/'+movie.logo) }}"
+                            <img src="{{ url_for('static',filename='uploads/movie/image/'+movie.logo) }}"
                                  style="margin-top:5px;" class="img-responsive"
                                  alt="">
                         </div>
@@ -146,7 +146,7 @@
     jwplayer("moviecontainer").setup({
         flashplayer: "{{ url_for('static',filename='jwplayer/jwplayer.flash.swf') }}",
         playlist: [{
-            file: "{{ url_for('static',filename='uploads/'+movie.url) }}",
+            file: "{{ url_for('static',filename='uploads/movie/'+movie.url) }}",
             title: "{{ movie.title }}"
         }],
         modes: [{

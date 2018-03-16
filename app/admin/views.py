@@ -8,7 +8,7 @@
 from . import admins
 from flask import render_template, redirect, url_for, flash, session, request
 from app.admin.forms import LoginForm, TagForm, MovieForm, PreviewForm
-from app.models import Admin, Tag, Movie, Preview
+from app.models import Admin, Tag, Movie, Preview, User
 from functools import wraps
 from app import db, app
 import os
@@ -166,13 +166,18 @@ def movie_add():
         data = form.data
         file_url = str(form.url.data.filename)
         file_logo = str(form.logo.data.filename)
-        if not os.path.exists(app.config["UP_DIR"]):
-            os.makedirs(app.config["UP_DIR"])
-            os.chmod(app.config["UP_DIR"], "rw")
+        if not os.path.exists(app.config["UP_DIR_MOVIE"]):
+            os.makedirs(app.config["UP_DIR_MOVIE"])
+            os.chmod(app.config["UP_DIR_MOVIE"], "rw")
+
+        if not os.path.exists(app.config["UP_DIR_MOVIE_IMG"]):
+            os.makedirs(app.config["UP_DIR_MOVIE_IMG"])
+            os.chmod(app.config["UP_DIR_MOVIE_IMG"], "rw")
+
         url = change_filename(file_url)
         logo = change_filename(file_logo)
-        form.url.data.save(app.config["UP_DIR"] + url)
-        form.logo.data.save(app.config["UP_DIR"] + logo)
+        form.url.data.save(app.config["UP_DIR_MOVIE"] + url)
+        form.logo.data.save(app.config["UP_DIR_MOVIE_IMG"] + logo)
         movie = Movie(
             title=data['title'],
             url=url,
@@ -242,23 +247,27 @@ def movie_edit(id=None):
             return redirect(url_for("admin.movie_edit", id=id))
 
         # 判断文件并且创建文件
-        if not os.path.exists(app.config["UP_DIR"]):
-            os.makedirs(app.config["UP_DIR"])
-            os.chmod(app.config["UP_DIR"], "rw")
+        if not os.path.exists(app.config["UP_DIR_MOVIE"]):
+            os.makedirs(app.config["UP_DIR_MOVIE"])
+            os.chmod(app.config["UP_DIR_MOVIE"], "rw")
+
+        if not os.path.exists(app.config["UP_DIR_MOVIE_IMG"]):
+            os.makedirs(app.config["UP_DIR_MOVIE_IMG"])
+            os.chmod(app.config["UP_DIR_MOVIE_IMG"], "rw")
 
         if form.url.data != "":
             file_url = str(form.url.data.filename)
             # 删除原来资源
             file_del(movie.url)
             movie.url = change_filename(file_url)
-            form.url.data.save(app.config["UP_DIR"] + movie.url)
+            form.url.data.save(app.config["UP_DIR_MOVIE"] + movie.url)
 
         if form.logo.data != "":
             file_logo = str(form.logo.data.filename)
             # 删除原来资源
             file_del(movie.logo)
             movie.logo = change_filename(file_logo)
-            form.logo.data.save(app.config["UP_DIR"] + movie.logo)
+            form.logo.data.save(app.config["UP_DIR_MOVIE_IMG"] + movie.logo)
 
         movie.title = data['title']
         movie.tag_id = int(data['tag_id'])
@@ -298,11 +307,13 @@ def preview_add():
     if form.validate_on_submit():
         data = form.data
         file_logo = str(form.logo.data.filename)
-        if not os.path.exists(app.config["UP_DIR"]):
-            os.makedirs(app.config["UP_DIR"])
-            os.chmod(app.config["UP_DIR"], "rw")
+
+        if not os.path.exists(app.config["UP_DIR_PREVIEW"]):
+            os.makedirs(app.config["UP_DIR_PREVIEW"])
+            os.chmod(app.config["UP_DIR_PREVIEW"], "rw")
+
         logo = change_filename(file_logo)
-        form.logo.data.save(app.config["UP_DIR"] + logo)
+        form.logo.data.save(app.config["UP_DIR_PREVIEW"] + logo)
         preview = Preview(
             logo=logo,
             title=data['title']
@@ -370,16 +381,16 @@ def preview_edit(id=None):
             return redirect(url_for("admin.preview_edit", id=id))
 
         # 判断文件并且创建文件
-        if not os.path.exists(app.config["UP_DIR"]):
-            os.makedirs(app.config["UP_DIR"])
-            os.chmod(app.config["UP_DIR"], "rw")
+        if not os.path.exists(app.config["UP_DIR_PREVIEW"]):
+            os.makedirs(app.config["UP_DIR_PREVIEW"])
+            os.chmod(app.config["UP_DIR_PREVIEW"], "rw")
 
         if form.logo.data != "":
             file_logo = str(form.logo.data.filename)
             # 删除原来资源
             file_del(preview.logo)
             preview.logo = change_filename(file_logo)
-            form.logo.data.save(app.config["UP_DIR"] + preview.logo)
+            form.logo.data.save(app.config["UP_DIR_PREVIEW"] + preview.logo)
 
         preview.title = data['title']
         db.session.add(preview)
@@ -390,10 +401,15 @@ def preview_edit(id=None):
 
 
 # 会员列表
-@admins.route("/user/list/")
+@admins.route("/user/list/<int:page>/", methods=['GET'])
 @admin_login_req
-def user_list():
-    return render_template('admin/user_list.html')
+def user_list(page=None):
+    if page is None:
+        page = 1
+    page_data = User.query.order_by(
+        User.addtime.desc()
+    ).paginate(page=page, per_page=10)
+    return render_template('admin/user_list.html', page_data=page_data)
 
 
 # 查看会员

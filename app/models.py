@@ -5,11 +5,24 @@
 # @Software  ：PyCharm
 # @Detial    ：数据模块models
 
-from app import db
+
 import pymysql
 from datetime import datetime
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
+HOSTNAME = '127.0.0.1'
+PORT = '3306'
+DATABASE = 'movie'
+USERNAME = 'root'
+PASSWORD = 'hjy'
+DB_URI = 'mysql+pymysql://{}:{}@{}:{}/{}?charset=utf8'.format(USERNAME, PASSWORD, HOSTNAME, PORT, DATABASE)
 
+app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:hjy@127.0.0.1:3306/movie?charset=utf8"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
+app.config["SECRET_KEY"] = '173fe082661a4359b5f425392d9877c4'
+db = SQLAlchemy(app)
 # 会员
 class User(db.Model):
     __tablename__ = "user"
@@ -19,6 +32,7 @@ class User(db.Model):
     email = db.Column(db.String(100), unique=True)  # 邮箱
     phone = db.Column(db.String(11), unique=True)  # 电话
     info = db.Column(db.Text)  # 简介
+    status = db.Column(db.String(1), default=0)  # 状态 0 激活 1 冻结
     face = db.Column(db.String(255), unique=True)  # 头像
     addtime = db.Column(db.DateTime, index=True, default=datetime.now)  # 注册时间
     uuid = db.Column(db.String(255))  # 唯一标识
@@ -197,7 +211,7 @@ class Oplog(db.Model):
 
 
 if __name__ == '__main__':
-    # db.create_all()
+    db.create_all()
     '''
     role = Role(
         name="超级管理员",
