@@ -16,11 +16,12 @@
                     <h3 class="box-title">会员列表</h3>
                     <div class="box-tools">
                         <div class="input-group input-group-sm" style="width: 150px;">
-                            <input type="text" name="table_search" class="form-control pull-right"
+                            <input id="key_tag" type="text" name="table_search" class="form-control pull-right"
                                    placeholder="请输入关键字">
 
                             <div class="input-group-btn">
-                                <button type="submit" class="btn btn-default"><i class="fa fa-search"></i>
+                                <button type="submit" class="btn btn-default"><i class="fa fa-search"
+                                                                                 onclick="do_search()"></i>
                                 </button>
                             </div>
                         </div>
@@ -31,6 +32,13 @@
                     <div class="alert alert-success alert-dismissible">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                         <h4><i class="icon fa fa-check"></i>操作成功！</h4>
+                        {{ msg }}
+                    </div>
+                    {% endfor %}
+                    {% for msg in get_flashed_messages(category_filter=['err']) %}
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-ban"></i> 操作失败！</h4>
                         {{ msg }}
                     </div>
                     {% endfor %}
@@ -56,16 +64,20 @@
                                 <img src="{{ url_for('static',filename='uploads/head/'+v.face) }}"
                                      class="img-responsive center-block" alt="" style="width: 80px; height: 80px">
                             </td>
-                            <td>正常/冻结</td>
+                            {% if v.status and v.status == 1 %}
+                            <td>冻结</td>
+                            {% else %}
+                            <td>正常</td>
+                            {% endif %}
                             <td>{{ v.addtime }}</td>
                             <td>
-                                <a class="label label-success" href="{{ url_for('admin.user_view') }}">查看</a>
+                                <a class="label label-success" href="{{ url_for('admin.user_view', id=v.id) }}">查看</a>
                                 &nbsp;
-                                <a class="label label-info">解冻</a>
+                                <a class="label label-info" href="{{ url_for('admin.user_unfreeze', id=v.id) }}">解冻</a>
                                 &nbsp;
-                                <a class="label label-warning">冻结</a>
+                                <a class="label label-warning" href="{{ url_for('admin.user_freeze', id=v.id) }}">冻结</a>
                                 &nbsp;
-                                <a class="label label-danger">删除</a>
+                                <a class="label label-danger" href="{{ url_for('admin.user_del', id=v.id) }}">删除</a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -87,5 +99,10 @@
         $("#g-5").addClass("active");
         $("#g-5-1").addClass("active");
     });
+
+    function do_search() {
+        var key = document.getElementById("key_tag").value;
+        location.href = "{{ url_for('admin.user_search',page=1) }}?key=" + key;
+    }
 </script>
 {% endblock %}

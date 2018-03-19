@@ -8,7 +8,7 @@
 from . import admins
 from flask import render_template, redirect, url_for, flash, session, request
 from app.admin.forms import LoginForm, TagForm, MovieForm, PreviewForm
-from app.models import Admin, Tag, Movie, Preview, User
+from app.models import Admin, Tag, Movie, Preview, User, Comment
 from functools import wraps
 from app import db, app
 import os
@@ -35,9 +35,9 @@ def change_filename(filename):
 
 
 # 删除某个文件夹
-def file_del(filename):
-    if filename is not None and filename != "" and os.path.exists(app.config["UP_DIR"]):
-        file_path = os.path.join(app.config["UP_DIR"], filename)
+def file_del(path, filename):
+    if filename is not None and filename != "" and os.path.exists(path):
+        file_path = os.path.join(path, filename)
         if os.path.exists(file_path):
             os.remove(file_path)
 
@@ -220,8 +220,8 @@ def movie_del(id=None):
     db.session.delete(movie)
     db.session.commit()
     # 删除文件
-    file_del(movie.url)
-    file_del(movie.logo)
+    file_del(app.config["UP_DIR_MOVIE"], movie.url)
+    file_del(app.config["UP_DIR_MOVIE_IMG"], movie.logo)
     flash("电影删除成功！", 'ok')
     return redirect(url_for("admin.movie_list", page=1))
 
@@ -258,14 +258,14 @@ def movie_edit(id=None):
         if form.url.data != "":
             file_url = str(form.url.data.filename)
             # 删除原来资源
-            file_del(movie.url)
+            file_del(app.config["UP_DIR_MOVIE"], movie.url)
             movie.url = change_filename(file_url)
             form.url.data.save(app.config["UP_DIR_MOVIE"] + movie.url)
 
         if form.logo.data != "":
             file_logo = str(form.logo.data.filename)
             # 删除原来资源
-            file_del(movie.logo)
+            file_del(app.config["UP_DIR_MOVIE_IMG"], movie.logo)
             movie.logo = change_filename(file_logo)
             form.logo.data.save(app.config["UP_DIR_MOVIE_IMG"] + movie.logo)
 
@@ -360,7 +360,7 @@ def preview_del(id=None):
     db.session.delete(preview)
     db.session.commit()
     # 删除文件
-    file_del(preview.logo)
+    file_del(app.config["UP_DIR_PREVIEW"], preview.logo)
     flash("电影上映预告删除成功！", 'ok')
     return redirect(url_for("admin.preview_list", page=1))
 
@@ -388,7 +388,7 @@ def preview_edit(id=None):
         if form.logo.data != "":
             file_logo = str(form.logo.data.filename)
             # 删除原来资源
-            file_del(preview.logo)
+            file_del(app.config["UP_DIR_PREVIEW"], preview.logo)
             preview.logo = change_filename(file_logo)
             form.logo.data.save(app.config["UP_DIR_PREVIEW"] + preview.logo)
 
@@ -413,17 +413,86 @@ def user_list(page=None):
 
 
 # 查看会员
-@admins.route("/user/view/")
+@admins.route("/user/view/<int:id>/", methods=['GET'])
 @admin_login_req
-def user_view():
-    return render_template('admin/user_view.html')
+def user_view(id=None):
+    user = User.query.get_or_404(int(id))
+    return render_template('admin/user_view.html', user=user)
+
+
+# 删除会员
+@admins.route("/user/del/<int:id>/", methods=['GET'])
+@admin_login_req
+def user_del(id=None):
+    user = User.query.filter_by(id=id).first_or_404()
+    db.session.delete(user)
+    db.session.commit()
+    # 删除文件
+    file_del(app.config["UP_DIR_HEAD"], user.face)
+    flash("会员删除成功！", 'ok')
+    return redirect(url_for("admin.user_list", page=1))
+
+
+# 会员搜索
+@admins.route("/user/search/<int:page>/", methods=['GET'])
+@admin_login_req
+def user_search(page=None):
+    if page is None:
+        page = 1
+    key = request.args.get('key', "")
+    page_data = User.query.filter(
+        User.name.ilike('%' + key + "%")
+    ).order_by(
+        User.addtime.desc()
+    ).paginate(page=page, per_page=10)
+    return render_template('admin/user_list.html', page_data=page_data)
+
+
+# 会员冻结
+@admins.route("/user/freeze/<int:id>/", methods=['GET'])
+@admin_login_req
+def user_freeze(id=None):
+    user = User.query.filter_by(id=id).first_or_404()
+    # 判断用户是否存在以及未冻结情况下。
+    if user.status == 0:
+        user.status = 1
+        db.session.add(user)
+        db.session.commit()
+        flash("会员冻结成功！", 'ok')
+    else:
+        flash("会员冻结失败(当前会员已经是冻结状态)！", 'err')
+    return redirect(url_for("admin.user_list", page=1))
+
+
+# 会员解冻
+@admins.route("/user/unfreeze/<int:id>/", methods=['GET'])
+@admin_login_req
+def user_unfreeze(id=None):
+    user = User.query.filter_by(id=id).first_or_404()
+    # 判断用户是否存在以及冻结情况下。
+    if user.status == 1:
+        user.status = 0
+        db.session.add(user)
+        db.session.commit()
+        flash("会员解冻成功！", 'ok')
+    else:
+        flash("会员解冻失败(当前会员已经是正常状态)！", 'err')
+    return redirect(url_for("admin.user_list", page=1))
 
 
 # 评论列表
-@admins.route("/comment/list/")
+@admins.route("/comment/list/<int:page>/")
 @admin_login_req
-def comment_list():
-    return render_template('admin/comment_list.html')
+def comment_list(page=None):
+    if page is None:
+        page = 1
+    page_data = Comment.query.join(Movie).join(User).filter(
+        Movie.id == Comment.movie_id,
+        User.id == Comment.user_id
+    ).order_by(
+        Comment.addtime.desc()
+    ).paginate(page=page, per_page=10)
+    return render_template('admin/comment_list.html', page_data=page_data)
 
 
 # 收藏列表
