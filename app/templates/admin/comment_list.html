@@ -1,12 +1,11 @@
 {% extends 'admin/admin.html'%}
-
+{% import 'ui/admin_page.html' as pg %}
 {% block css %}
 <style>
     .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
         vertical-align: middle;
         text-align: left;
     }
-
     .td_bd {
         font-weight: bold;
     }
@@ -30,7 +29,7 @@
                     <div class="box-tools">
                         <div class="input-group input-group-sm" style="width: 150px;">
                             <input type="text" name="table_search" class="form-control pull-right"
-                                   placeholder="请输入关键字...">
+                                   placeholder="请输入关键字">
 
                             <div class="input-group-btn">
                                 <button type="submit" class="btn btn-default"><i class="fa fa-search"></i>
@@ -40,35 +39,27 @@
                     </div>
                 </div>
                 <div class="box-body box-comments">
-                    {% for v in range(1,11) %}
+                    {% for v in page_data.items %}
                     <div class="box-comment">
                         <img class="img-circle img-sm"
-                             src="{{ url_for('static',filename='admin/dist/img/user3-128x128.jpg') }}" alt="User Image">
+                             src="{{ url_for('static',filename='uploads/head/'+v.user.face) }}" alt="User Image">
                         <div class="comment-text">
                                     <span class="username">
-                                        小美
+                                        {{ v.user.name }}
                                         <span class="text-muted pull-right">
                                             <i class="fa fa-calendar" aria-hidden="true"></i>
                                             &nbsp;
-                                            2017-01-01 12:00:00
+                                            {{ v.addtime }}
                                         </span>
                                     </span>
-                            关于电影<a>《环太平洋》</a>的评论：xxx
+                            关于电影<a>《{{ v.movie.title }}》</a>的评论：{{ v.content }}
                             <br><a class="label label-danger pull-right">删除</a>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
                 <div class="box-footer clearfix">
-                    <ul class="pagination pagination-sm no-margin pull-right">
-                        <li><a href="#">首页</a></li>
-                        <li><a href="#">上一页</a></li>
-                        <li><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">下一页</a></li>
-                        <li><a href="#">尾页</a></li>
-                    </ul>
+                    {{ pg.page(page_data,'admin.comment_list') }}
                 </div>
             </div>
         </div>
