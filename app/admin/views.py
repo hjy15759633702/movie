@@ -680,6 +680,7 @@ def moviecol_search(page=None):
 # 管理员登录日志列表
 @admins.route("/adminloginlog/list/<int:page>/")
 @admin_login_req
+@admin_auth
 def adminloginlog_list(page=None):
     if page is None:
         page = 1
