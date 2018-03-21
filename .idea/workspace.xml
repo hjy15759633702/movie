@@ -1,41 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7cd120c8-e31d-4756-82b3-bec24d387248" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/templates/admin/auth_edit.html" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/static/uploads/head/2.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/static/uploads/movie/20180319143935d286c7703b06464c8b33078ee74d1c28.mp4" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/static/uploads/movie/20180319144015e92ec14ed2b5470bae6b917597866dd0.mp4" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/static/uploads/movie/2018031917434046159aafeef040778836037700d69fbf.mp4" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/static/uploads/movie/20180319174417b50c1e85c41a44099d2b5e565ef9d1a8.mp4" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/static/uploads/movie/image/20180319143935728f5c39541945ed834c7a1747e61702.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/static/uploads/movie/image/201803191440153384e6bc17f145e6b24e61e46b3dba5c.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/static/uploads/movie/image/201803191743405312d6c9bcfc4127931fafa985910853.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/static/uploads/movie/image/20180319174417198d5446353d48b0a288d13b95342a4c.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/static/uploads/movie/image/20180319230420cf816be7b484432cb3c3849ff4a8d388.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/static/uploads/preview/2018031914403865fdbe6455764aaab845ce99daa348d6.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/static/uploads/preview/201803191440490000ab66c95047688d2502ae232a89e9.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/static/uploads/preview/201803191440576549c696383f4d7880358be2594b10bc.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/static/uploads/preview/20180319144106fbcc5bcebd0d4e29aed26c56bf0bc97f.png" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/admin/forms.py" afterPath="$PROJECT_DIR$/app/admin/forms.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/admin/views.py" afterPath="$PROJECT_DIR$/app/admin/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models.py" afterPath="$PROJECT_DIR$/app/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/admin/admin.html" afterPath="$PROJECT_DIR$/app/templates/admin/admin.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/admin/adminloginlog_list.html" afterPath="$PROJECT_DIR$/app/templates/admin/adminloginlog_list.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/admin/auth_add.html" afterPath="$PROJECT_DIR$/app/templates/admin/auth_add.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/admin/auth_list.html" afterPath="$PROJECT_DIR$/app/templates/admin/auth_list.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/admin/comment_list.html" afterPath="$PROJECT_DIR$/app/templates/admin/comment_list.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/admin/grid.html" afterPath="$PROJECT_DIR$/app/templates/admin/grid.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/admin/login.html" afterPath="$PROJECT_DIR$/app/templates/admin/login.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/admin/moviecol_list.html" afterPath="$PROJECT_DIR$/app/templates/admin/moviecol_list.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/admin/oplog_list.html" afterPath="$PROJECT_DIR$/app/templates/admin/oplog_list.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/admin/pwd.html" afterPath="$PROJECT_DIR$/app/templates/admin/pwd.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/admin/role_add.html" afterPath="$PROJECT_DIR$/app/templates/admin/role_add.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/admin/user_list.html" afterPath="$PROJECT_DIR$/app/templates/admin/user_list.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/admin/userloginlog_list.html" afterPath="$PROJECT_DIR$/app/templates/admin/userloginlog_list.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sql" afterPath="$PROJECT_DIR$/sql" />
-    </list>
+    <list default="true" id="7cd120c8-e31d-4756-82b3-bec24d387248" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -402,7 +368,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35584217" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3283582" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -410,7 +375,7 @@
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.56218904" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.07296849" sideWeight="0.4969651" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.07296849" sideWeight="0.4969651" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3217247" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
