@@ -21,3 +21,5 @@ INSERT userlog(ip,addtime,user_id) VALUES('127.0.0.1','2018-03-16 16:47',1);
 INSERT userlog(ip,addtime,user_id) VALUES('127.0.0.2','2018-03-16 15:47',2);
 INSERT userlog(ip,addtime,user_id) VALUES('127.0.0.3','2018-03-16 14:47',2);
 INSERT userlog(ip,addtime,user_id) VALUES('127.0.0.4','2018-03-16 13:47',1);
+
+INSERT userlog(ip,addtime,user_id) VALUES('127.0.0.4','2018-03-16 13:47',1);

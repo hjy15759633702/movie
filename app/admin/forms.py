@@ -7,13 +7,13 @@
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, FileField, TextAreaField, SelectField, SelectMultipleField
-from wtforms.validators import DataRequired, ValidationError
-from app.models import Admin, Tag, Auth
+from wtforms.validators import DataRequired, ValidationError, EqualTo
+from app.models import Admin, Tag, Auth, Role
 
 # 查询所有标签
 tags = Tag.query.all()
 auth_lists = Auth.query.all()
-
+role_lists = Role.query.all()
 
 # 管理员登录表单
 class LoginForm(FlaskForm):
@@ -327,6 +327,67 @@ class RoleForm(FlaskForm):
     )
     submit = SubmitField(
         "编辑",
+        render_kw={
+            "class": "btn btn-primary"
+        }
+    )
+
+
+# 添加管理员表单
+class AdminForm(FlaskForm):
+    '''添加管理员表单'''
+    name = StringField(
+        label="管理员名称",
+        validators=[
+            DataRequired("请输入管理员名称！")
+        ],
+        description="管理员名称",
+        render_kw={
+            "class": "form-control",
+            "placeholder": "请输入管理员名称",
+            "id": "input_name"
+        }
+    )
+    pwd = PasswordField(
+        label="管理员密码",
+        validators=[
+            DataRequired("请输入管理员密码！")
+        ],
+        description="管理员密码",
+        render_kw={
+            "class": "form-control",
+            "placeholder": "请输入管理员密码",
+            "id": "input_pwd"
+        }
+    )
+    repwd = PasswordField(
+        label="管理员重复密码",
+        validators=[
+            DataRequired("请输入管理员重复密码！"),
+            EqualTo("pwd", "两次输入密码不一致！")
+        ],
+        description="管理员重复密码",
+        render_kw={
+            "class": "form-control",
+            "placeholder": "请输入管理员重复密码",
+            "id": "input_re_pwd"
+        }
+    )
+    role_id = SelectField(
+        label="所属角色",
+        validators=[
+            DataRequired("请选择角色！")
+        ],
+        coerce=int,
+        choices=[(v.id, v.name) for v in role_lists],
+        description="角色",
+        render_kw={
+            "class": "form-control",
+            "id": "input_role_id"
+        }
+    )
+    submit = SubmitField(
+        "添加",
         render_kw={
             "class": "btn btn-primary"
         }
