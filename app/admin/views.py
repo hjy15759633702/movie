@@ -49,7 +49,6 @@ def admin_auth(f):
         if str(request.url_rule) not in urls:
             abort(404)
         return f(*args, **kwargs)
-
     return decorated_function
 
 
@@ -181,11 +180,11 @@ def tag_list(page=None):
 @admin_auth
 def tag_del(id=None):
     tag = Tag.query.filter_by(id=id).first_or_404()
+    # 操作日志
+    add_log('删除标签《%s》' % tag.name)
     db.session.delete(tag)
     db.session.commit()
     flash("标签删除成功！", 'ok')
-    # 操作日志
-    add_log('删除标签《%s》' % tag.name)
     return redirect(url_for("admin.tag_list", page=1))
 
 
@@ -292,14 +291,14 @@ def movie_list(page=None):
 @admin_auth
 def movie_del(id=None):
     movie = Movie.query.filter_by(id=id).first_or_404()
+    # 操作日志
+    add_log('删除电影《%s》' % movie.title)
     db.session.delete(movie)
     db.session.commit()
     # 删除文件
     file_del(app.config["UP_DIR_MOVIE"], movie.url)
     file_del(app.config["UP_DIR_MOVIE_IMG"], movie.logo)
     flash("电影删除成功！", 'ok')
-    # 操作日志
-    add_log('删除电影《%s》' % movie.title)
     return redirect(url_for("admin.movie_list", page=1))
 
 
@@ -443,13 +442,13 @@ def preview_search(page=None):
 @admin_auth
 def preview_del(id=None):
     preview = Preview.query.filter_by(id=id).first_or_404()
+    # 操作日志
+    add_log('删除上映预告《%s》' % preview.title)
     db.session.delete(preview)
     db.session.commit()
     # 删除文件
     file_del(app.config["UP_DIR_PREVIEW"], preview.logo)
     flash("电影上映预告删除成功！", 'ok')
-    # 操作日志
-    add_log('删除上映预告《%s》' % preview.title)
     return redirect(url_for("admin.preview_list", page=1))
 
 
@@ -520,13 +519,13 @@ def user_view(id=None):
 @admin_auth
 def user_del(id=None):
     user = User.query.filter_by(id=id).first_or_404()
+    # 操作日志
+    add_log('删除会员《%s》' % user.name)
     db.session.delete(user)
     db.session.commit()
     # 删除文件
     file_del(app.config["UP_DIR_HEAD"], user.face)
     flash("会员删除成功！", 'ok')
-    # 操作日志
-    add_log('删除会员《%s》' % user.name)
     return redirect(url_for("admin.user_list", page=1))
 
 
@@ -622,11 +621,11 @@ def comment_search(page=None):
 @admin_auth
 def comment_del(id=None):
     comment = Comment.query.filter_by(id=id).first_or_404()
+    # 操作日志
+    add_log('删除评论《%s》' % comment.content)
     db.session.delete(comment)
     db.session.commit()
     flash("评论删除成功！", 'ok')
-    # 操作日志
-    add_log('删除评论《%s》' % comment.content)
     return redirect(url_for("admin.comment_list", page=1))
 
 
@@ -652,11 +651,11 @@ def moviecol_list(page=None):
 @admin_auth
 def moviecol_del(id=None):
     moviecol = Moviecol.query.filter_by(id=id).first_or_404()
+    # 操作日志
+    add_log('删除电影收藏《%s》' % moviecol.movie.title)
     db.session.delete(moviecol)
     db.session.commit()
     flash("电影收藏删除成功！", 'ok')
-    # 操作日志
-    add_log('删除电影收藏《%s》' % moviecol.movie.title)
     return redirect(url_for("admin.moviecol_list", page=1))
 
 
@@ -812,11 +811,11 @@ def role_list(page=None):
 @admin_auth
 def role_del(id=None):
     role = Role.query.filter_by(id=id).first_or_404()
+    # 操作日志
+    add_log('删除角色《%s》' % role.name)
     db.session.delete(role)
     db.session.commit()
     flash("角色删除成功！", 'ok')
-    # 操作日志
-    add_log('删除角色《%s》' % role.name)
     return redirect(url_for("admin.role_list", page=1))
 
 
@@ -918,11 +917,11 @@ def auth_search(page=None):
 @admin_auth
 def auth_del(id=None):
     auth = Auth.query.filter_by(id=id).first_or_404()
+    # 操作日志
+    add_log('删除权限《%s》' % auth.name)
     db.session.delete(auth)
     db.session.commit()
     flash("权限删除成功！", 'ok')
-    # 操作日志
-    add_log('删除权限《%s》' % auth.name)
     return redirect(url_for("admin.auth_list", page=1))
 
 

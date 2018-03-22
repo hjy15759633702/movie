@@ -6,7 +6,12 @@
 # @Detial    ：前台视图
 
 from . import homes
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, flash, session, request
+from app.home.forms import RegistForm, LoginForm
+from app.models import User, Userlog
+from app import db
+import uuid
+from werkzeug.security import generate_password_hash
 
 
 # 列表
@@ -16,9 +21,30 @@ def index():
 
 
 # 登录
-@homes.route("/login/")
+@homes.route("/login/", methods=['POST', 'GET'])
 def login():
-    return render_template('home/login.html')
+    form = LoginForm()
+    if form.validate_on_submit():
+        data = form.data
+        user = User.query.filter_by(name=data['name']).first()
+        # 账号冻结
+        if not user.status == 0:
+            flash("该账号已经被冻结了，请联系客服！", 'err')
+            return redirect(url_for("home.login"))
+
+        if not user.check_pwd(data['pwd']):
+            flash("密码错误！", 'err')
+            return redirect(url_for("home.login"))
+        session['user'] = data['name']
+        session['user_id'] = user.id
+        userlog = Userlog(
+            user_id=session['user_id'],
+            ip=request.remote_addr,
+        )
+        db.session.add(userlog)
+        db.session.commit()
+        return redirect(request.args.get('next') or url_for("home.index"))
+    return render_template('home/login.html', form=form)
 
 
 # 退出
@@ -28,9 +54,23 @@ def logout():
 
 
 # 注册
-@homes.route("/regist/")
+@homes.route("/regist/", methods=['POST', 'GET'])
 def regist():
-    return render_template('home/regist.html')
+    form = RegistForm()
+    if form.validate_on_submit():
+        data = form.data
+        user = User(
+            name=data['name'],
+            pwd=generate_password_hash(data['pwd']),
+            email=data['email'],
+            phone=data['phone'],
+            uuid=uuid.uuid4().hex
+        )
+        db.session.add(user)
+        db.session.commit()
+        flash("会员注册成功！", 'ok')
+        return redirect(url_for("home.regist"))
+    return render_template('home/regist.html', form=form)
 
 
 # 会员中心

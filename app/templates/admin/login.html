@@ -21,9 +21,9 @@
         {% for msg in get_flashed_messages(category_filter=['ok']) %}
         <p class="login-box-msg" style="color: green; font-size: 10px">{{ msg }}</p>
         {% endfor %}
-        {% for msg in get_flashed_messages(category_filter=['err']) %}
+        {% for msg in g%}et_flashed_messages(category_filter=['err']) %}
         <p class="login-box-msg" style="color: red; font-size: 10px">{{ msg }}</p>
-        {% endfor %}
+        {% endfor
         <form action="" method="post" id="form-data">
             <div class="form-group has-feedback">
                 {{ form.account }}
