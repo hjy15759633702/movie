@@ -6,7 +6,7 @@
 # @Detial    ：前台表单
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
+from wtforms import StringField, SubmitField, PasswordField, FileField, TextAreaField
 from wtforms.validators import DataRequired, Email, Regexp, ValidationError, EqualTo
 from app.models import User
 
@@ -135,3 +135,68 @@ class RegistForm(FlaskForm):
         user_count = User.query.filter_by(email=email).count()
         if user_count == 1:
             raise ValidationError('邮箱已经存在!')
+
+
+# 会员中心表单
+class UserdetialForm(FlaskForm):
+    '''会员中心表单'''
+    name = StringField(
+        label="昵称",
+        validators=[
+            DataRequired("请输入昵称!")
+        ],
+        description="昵称",
+        render_kw={
+            "class": "form-control",
+            "placeholder": "请输入昵称",
+        }
+    )
+    email = StringField(
+        label="邮箱",
+        validators=[
+            DataRequired("请输入邮箱!"),
+            Email("邮箱格式不正确!")
+        ],
+        description="邮箱",
+        render_kw={
+            "class": "form-control",
+            "placeholder": "请输入邮箱",
+        }
+    )
+    phone = StringField(
+        label="手机",
+        validators=[
+            DataRequired("请输入手机号码!"),
+            Regexp("^0\d{2,3}\d{7,8}$|^1[358]\d{9}$|^147\d{8}", message="手机号码格式不正确!")
+        ],
+        description="手机号码",
+        render_kw={
+            "class": "form-control",
+            "placeholder": "请输入手机号码",
+        }
+    )
+    face = FileField(
+        label="头像",
+        validators=[
+            DataRequired("请上传头像！")
+        ],
+        description="头像"
+    )
+    info = TextAreaField(
+        label="简介",
+        validators=[
+            DataRequired("请输入简介！")
+        ],
+        description="简介",
+        render_kw={
+            "class": "form-control",
+            "rows": "10",
+            "id": "input_info"
+        }
+    )
+    submit = SubmitField(
+        '保存修改',
+        render_kw={
+            "class": "btn btn-success"
+        }
+    )

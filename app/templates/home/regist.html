@@ -11,7 +11,18 @@
                 <form role="form" , method="post">
                     <fieldset>
                         {% for msg in get_flashed_messages(category_filter=['ok']) %}
-                        <p class="login-box-msg" style="color: green; font-size: 10px">{{ msg }}</p>
+                        <div class="alert alert-success alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <h4><i class="icon fa fa-check"></i> 操作成功！</h4>
+                            {{ msg }}
+                        </div>
+                        {% endfor %}
+                        {% for msg in get_flashed_messages(category_filter=['err']) %}
+                        <div class="alert alert-danger alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <h4><i class="icon fa fa-ban"></i> 操作失败！</h4>
+                            {{ msg }}
+                        </div>
                         {% endfor %}
                         <div class="form-group">
                             <label for="input_name"><span class="glyphicon glyphicon-user"></span>&nbsp;{{
