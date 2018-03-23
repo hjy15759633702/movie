@@ -22,28 +22,20 @@
                     <tr>
                         <td style="width:10%;">电影标签</td>
                         <td style="width:90%;">
-                            <a class="label label-info"><span class="glyphicon glyphicon-tag"></span>&nbsp;标签一</a>
-                            &nbsp;
-                            <a class="label label-info"><span class="glyphicon glyphicon-tag"></span>&nbsp;标签一</a>
-                            &nbsp;
-                            <a class="label label-info"><span class="glyphicon glyphicon-tag"></span>&nbsp;标签一</a>
-                            &nbsp;
-                            <a class="label label-info"><span class="glyphicon glyphicon-tag"></span>&nbsp;标签一</a>
-                            &nbsp;
-                            <a class="label label-info"><span class="glyphicon glyphicon-tag"></span>&nbsp;标签一</a>
+                            {% for tag in tags %}
+                            <a href="{{ url_for('home.index')?tid={{ tag.id }} }}" class="label label-info" style="margin: 5px"><span class="glyphicon glyphicon-tag"></span>&nbsp;{{ tag.name }}</a>
+                            {% if (loop.index) % 8 == 0 %}
+                            <br/>
+                            {% endif %}
+                            {% endfor %}
+                        </td>
                     </tr>
                     <tr>
                         <td>电影星级</td>
                         <td>
-                            <a class="label label-warning"><span class="glyphicon glyphicon-star"></span>&nbsp;一星</a>
-                            &nbsp;
-                            <a class="label label-warning"><span class="glyphicon glyphicon-star"></span>&nbsp;二星</a>
-                            &nbsp;
-                            <a class="label label-warning"><span class="glyphicon glyphicon-star"></span>&nbsp;三星</a>
-                            &nbsp;
-                            <a class="label label-warning"><span class="glyphicon glyphicon-star"></span>&nbsp;四星</a>
-                            &nbsp;
-                            <a class="label label-warning"><span class="glyphicon glyphicon-star"></span>&nbsp;五星</a>
+                            {% for v in range(1,6) %}
+                            <a class="label label-warning"><span class="glyphicon glyphicon-star"></span>&nbsp;{{ v }}星</a>&nbsp;
+                            {% endfor %}
                         </td>
                     </tr>
                     <tr>
@@ -103,7 +95,7 @@
                             <span class="glyphicon glyphicon-star-empty" style="color:#FFD119"></span>
                         </div>
                     </div>
-                    <a href="{{ url_for('home.play') }}" class="btn btn-primary" target="_blank" role="button"><span
+                    <a href="{{ url_for('home.play', id=1) }}" class="btn btn-primary" target="_blank" role="button"><span
                             class="glyphicon glyphicon-play"></span>&nbsp;播放</a>
                 </div>
             </div>

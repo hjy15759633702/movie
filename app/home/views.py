@@ -7,8 +7,8 @@
 
 from . import homes
 from flask import render_template, redirect, url_for, flash, session, request
-from app.home.forms import RegistForm, LoginForm, UserdetialForm
-from app.models import User, Userlog
+from app.home.forms import RegistForm, LoginForm, UserdetialForm, PwdForm
+from app.models import User, Preview, Userlog, Comment, Movie, Moviecol, Tag
 from app import db, app
 import uuid
 from werkzeug.security import generate_password_hash
@@ -38,7 +38,20 @@ def user_login_req(f):
 # 列表
 @homes.route("/")
 def index():
-    return render_template('home/index.html')
+    tags = Tag.query.all()
+    tid = request.args.get("tid", 0)
+    star = request.args.get("star", 0)
+    time = request.args.get("time", 0)
+    pm = request.args.get("pm", 0)
+    cm = request.args.get("cm", 0)
+    p = dict(
+        tid=tid,
+        star=star,
+        time=time,
+        pm=pm,
+        cm=cm
+    )
+    return render_template('home/index.html', tags=tags, p=p)
 
 
 # 登录
@@ -48,14 +61,20 @@ def login():
     if form.validate_on_submit():
         data = form.data
         user = User.query.filter_by(name=data['name']).first()
-        # 账号冻结
-        if not user.status == 0:
-            flash("该账号已经被冻结了，请联系客服！", 'err')
+
+        if not user:
+            flash("账号不存在！", 'err')
             return redirect(url_for("home.login"))
 
         if not user.check_pwd(data['pwd']):
             flash("密码错误！", 'err')
             return redirect(url_for("home.login"))
+
+        # 账号冻结
+        if not user.status == 0:
+            flash("该账号已经被冻结了，请联系客服！", 'err')
+            return redirect(url_for("home.login"))
+
         session['user'] = data['name']
         session['user_id'] = user.id
         userlog = Userlog(
@@ -150,45 +169,92 @@ def user():
 
 
 # 修改密码
-@homes.route("/pwd/")
+@homes.route("/pwd/", methods=['POST', 'GET'])
 @user_login_req
 def pwd():
-    return render_template('home/pwd.html')
+    form = PwdForm()
+    if form.validate_on_submit():
+        data = form.data
+        user = User.query.filter_by(
+            name=session["user"]
+        ).first()
+        from werkzeug.security import generate_password_hash
+        user.pwd = generate_password_hash(data['new_pwd'])
+        db.session.add(user)
+        db.session.commit()
+        flash("修改密码成功，请重新登录！", 'ok')
+        return redirect(url_for("home.login"))
+
+    return render_template('home/pwd.html', form=form)
 
 
 # 评论
-@homes.route("/comments/")
-def comments():
-    return render_template('home/comments.html')
+@homes.route("/comments/", methods=['GET'])
+def comments(page=None):
+    if page is None:
+        page = 1
+    page_data = Comment.query.join(Movie).join(User).filter(
+        Movie.id == Comment.movie_id,
+        User.id == Comment.user_id
+    ).order_by(
+        Comment.addtime.desc()
+    ).paginate(page=page, per_page=10)
+    return render_template('home/comments.html', page_data=page_data)
 
 
 # 登录日志
-@homes.route("/loginlog/")
+@homes.route("/loginlog/<int:page>", methods=['GET'])
 @user_login_req
-def loginlog():
-    return render_template('home/loginlog.html')
+def loginlog(page=None):
+    if page is None:
+        page = 1
+    page_data = Userlog.query.join(User).filter(
+        User.id == Userlog.user_id,
+    ).order_by(
+        Userlog.addtime.desc()
+    ).paginate(page=page, per_page=10)
+    return render_template('home/loginlog.html', page_data=page_data)
 
 
 # 电影收藏
-@homes.route("/moviecol/")
+@homes.route("/moviecol/<int:page>/")
 @user_login_req
-def moviecol():
-    return render_template('home/moviecol.html')
+def moviecol(page=None):
+    if page is None:
+        page = 1
+    page_data = Moviecol.query.join(Movie).join(User).filter(
+        Movie.id == Moviecol.movie_id,
+        User.id == Moviecol.user_id
+    ).order_by(
+        Moviecol.addtime.desc()
+    ).paginate(page=page, per_page=10)
+    return render_template('home/moviecol.html', page_data=page_data)
 
 
-# 动画
+# 上映预告
 @homes.route("/animation/")
 def animation():
-    return render_template('home/animation.html')
+    previews = Preview.query.all()
+    return render_template('home/animation.html', previews=previews)
 
 
 # 搜索
-@homes.route("/search/")
-def search():
-    return render_template('home/search.html')
+@homes.route("/search/<int:page>/", methods=['GET'])
+def search(page=None):
+    if page is None:
+        page = 1
+    key = request.args.get('key', "")
+    page_data = Movie.query.join(Tag).filter(
+        Tag.id == Movie.tag_id,
+        Movie.title.ilike('%' + key + "%")
+    ).order_by(
+        Movie.addtime.desc()
+    ).paginate(page=page, per_page=10)
+    return render_template('home/search.html', movie_count=len(page_data.items), page_data=page_data, key=key)
 
 
 # 电影播放
-@homes.route("/play/")
-def play():
-    return render_template('home/play.html')
+@homes.route("/play/<int:id>/", methods=['GET'])
+def play(id=None):
+    movie = Movie.query.get_or_404(int(id))
+    return render_template('home/play.html', movie=movie)
