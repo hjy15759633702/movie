@@ -7,7 +7,7 @@
 
 from . import homes
 from flask import render_template, redirect, url_for, flash, session, request
-from app.home.forms import RegistForm, LoginForm, UserdetialForm, PwdForm
+from app.home.forms import RegistForm, LoginForm, UserdetialForm, PwdForm, CommentForm
 from app.models import User, Preview, Userlog, Comment, Movie, Moviecol, Tag
 from app import db, app
 import uuid
@@ -39,11 +39,50 @@ def user_login_req(f):
 @homes.route("/")
 def index():
     tags = Tag.query.all()
+    page_data = Movie.query
+
     tid = request.args.get("tid", 0)
+    if int(tid) != 0:
+        page_data = page_data.filter_by(tag_id=int(tid))
+
     star = request.args.get("star", 0)
+    if int(star) != 0:
+        page_data = page_data.filter_by(star=int(star))
+
     time = request.args.get("time", 0)
+    if int(time) != 0:
+        if int(time) == 1:
+            page_data = page_data.order_by(
+                Movie.addtime.desc()
+            )
+        else:
+            page_data = page_data.order_by(
+                Movie.addtime.asc()
+            )
+
     pm = request.args.get("pm", 0)
+    if int(pm) != 0:
+        if int(pm) == 1:
+            page_data = page_data.order_by(
+                Movie.playnum.desc()
+            )
+        else:
+            page_data = page_data.order_by(
+                Movie.playnum.asc()
+            )
+
     cm = request.args.get("cm", 0)
+    if int(cm) != 0:
+        if int(cm) == 1:
+            page_data = page_data.order_by(
+                Movie.commentnum.desc()
+            )
+        else:
+            page_data = page_data.order_by(
+                Movie.commentnum.asc()
+            )
+    page = request.args.get("page", 1)
+    page_data = page_data.paginate(page=int(page), per_page=10)
     p = dict(
         tid=tid,
         star=star,
@@ -51,7 +90,7 @@ def index():
         pm=pm,
         cm=cm
     )
-    return render_template('home/index.html', tags=tags, p=p)
+    return render_template('home/index.html', tags=tags, p=p, page_data=page_data, page_count=len(page_data.items))
 
 
 # 登录
@@ -83,7 +122,7 @@ def login():
         )
         db.session.add(userlog)
         db.session.commit()
-        return redirect(url_for("home.user"))
+        return redirect(request.args.get('next') or url_for("home.user"))
     return render_template('home/login.html', form=form)
 
 
@@ -254,7 +293,23 @@ def search(page=None):
 
 
 # 电影播放
-@homes.route("/play/<int:id>/", methods=['GET'])
-def play(id=None):
+@homes.route("/play/<int:id>/<int:page>/", methods=['GET', 'POST'])
+def play(id=None, page=1):
     movie = Movie.query.get_or_404(int(id))
-    return render_template('home/play.html', movie=movie)
+    form = CommentForm()
+    movie.playnum = movie.playnum + 1
+    if 'user' in session and form.validate_on_submit():
+        data = form.data
+        comment = Comment(
+            content=data['comment'],
+            movie_id=movie.id,
+            user_id=session['user_id']
+        )
+        db.session.add(comment)
+        db.session.commit()
+        movie.commentnum = movie.commentnum + 1
+        flash("评论成功！", 'ok')
+        return redirect(url_for("home.play", id=movie.id, page=page))
+    db.session.add(movie)
+    db.session.commit()
+    return render_template('home/play.html', movie=movie, form=form)
