@@ -1,5 +1,5 @@
 {% extends 'home/home.html'%}
-
+{% import 'ui/comments_page.html' as pg %}
 {% block css %}
 <!--播放页面-->
 <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='jwplayer/skins/stormtrooper.css') }}">
@@ -28,7 +28,7 @@
             <div class="panel-heading">
                 <h3 class="panel-title"><span class="glyphicon glyphicon-facetime-video"></span>&nbsp;电影介绍</h3>
             </div>
-            <div class="panel-body" style="height:459px;">
+            <div class="panel-body" style="height:459px;overflow: scroll">
                 <table class="table">
                     <tr>
                         <td style="width:30%;color:#ccc;font-weight:bold;font-style:italic;">
@@ -143,33 +143,43 @@
                     &nbsp;
                     <a class="btn btn-danger" id="btn-col"><span class="glyphicon glyphicon-heart"></span>&nbsp;收藏电影</a>
                 </form>
+                <div class="col-md-12">
+                    <font style="color: green; font-size: 10px" id="col_msg"></font>
+                </div>
+                <div class="clearfix"></div>
                 {% endif %}
                 <ul class="commentList">
+                    {% for v in page_data.items %}
                     <li class="item cl">
-                        <a href="user.html">
+                        <a>
                             <i class="avatar size-L radius">
-                                <img alt="50x50" src="holder.js/50x50" class="img-circle"
-                                     style="border:1px solid #abcdef;">
+                                {% if v.user.face %}
+                                <img alt="头像50x50" src="{{ url_for('static',filename='uploads/head/'+v.user.face) }}"
+                                     class="img-circle" style="border:1px solid #abcdef; width: 50px; height: 50px;">
+                                {% else %}
+                                <img alt="头像50x50" data-src="holder.js/50x50"
+                                     class="img-circle" style="border:1px solid #abcdef; width: 50px; height: 50px;">
+                                {% endif %}
                             </i>
                         </a>
                         <div class="comment-main">
                             <header class="comment-header">
                                 <div class="comment-meta">
-                                    <a class="comment-author" href="user.html">xiaoli</a>
+                                    <a class="comment-author">{{ v.user.name }}</a>
                                     评论于
-                                    <time title="2016-12-07 09:12:51" datetime="2016-12-07 09:12:51">2017-03-01
-                                        09:12:51
+                                    <time title="2016-12-07 09:12:51" datetime="2016-12-07 09:12:51">{{ v.addtime }}
                                     </time>
                                 </div>
                             </header>
                             <div class="comment-body">
-                                <p>这电影真好看！</p>
+                                <p>{{ v.content | safe }}</p>
                             </div>
                         </div>
                     </li>
+                    {% endfor %}
                 </ul>
                 <div class="col-md-12 text-center">
-
+                    {{ pg.page(page_data,'home.play',id=movie.id) }}
                 </div>
             </div>
         </div>
@@ -213,6 +223,27 @@
         "playlist.size": 400,
         height: 500,
         width: 774,
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $("#btn-col").click(function () {
+            $.ajax({
+                url: "{{ url_for('home.moviecol_add') }}",
+                type: "GET",
+                dataType: "json",
+                data: "mid=" + "{{ movie.id }}" + "&uid=" + "{{ session['user_id'] }}",
+                success: function (res) {
+                    if (res.ok == 1) {
+                        $("#col_msg").empty();
+                        $("#col_msg").append("收藏成功！")
+                    } else {
+                        $("#col_msg").empty();
+                        $("#col_msg").append("已经收藏！")
+                    }
+                }
+            });
+        });
     });
 </script>
 <!--播放页面-->

@@ -6,6 +6,7 @@
         vertical-align: middle;
         text-align: left;
     }
+
     .td_bd {
         font-weight: bold;
     }
@@ -32,7 +33,8 @@
                                    placeholder="请输入关键字">
 
                             <div class="input-group-btn">
-                                <button type="submit" class="btn btn-default" onclick="do_search()"><i class="fa fa-search"></i>
+                                <button type="submit" class="btn btn-default" onclick="do_search()"><i
+                                        class="fa fa-search"></i>
                                 </button>
                             </div>
                         </div>
@@ -48,8 +50,13 @@
                     {% endfor %}
                     {% for v in page_data.items %}
                     <div class="box-comment">
-                        <img class="img-circle img-sm"
-                             src="{{ url_for('static',filename='uploads/head/'+v.user.face) }}" alt="User Image">
+                        {% if v.user.face %}
+                        <img alt="头像80x80" src="{{ url_for('static',filename='uploads/head/'+v.user.face) }}"
+                             class="img-circle img-sm" style="width: 80px; height: 80px">
+                        {% else %}
+                        <img alt="头像80x80" data-src="holder.js/80x80"
+                             class="img-circle img-sm" style="width: 80px; height: 80px">
+                        {% endif %}
                         <div class="comment-text">
                                     <span class="username">
                                         {{ v.user.name }}
@@ -59,8 +66,9 @@
                                             {{ v.addtime }}
                                         </span>
                                     </span>
-                            关于电影<a>《{{ v.movie.title }}》</a>的评论：{{ v.content }}
-                            <br><a class="label label-danger pull-right" href="{{ url_for('admin.comment_del', id=v.id) }}">删除</a>
+                            关于电影<a>《{{ v.movie.title }}》</a>的评论：{{ v.content | safe }}
+                            <br><a class="label label-danger pull-right"
+                                   href="{{ url_for('admin.comment_del', id=v.id) }}">删除</a>
                         </div>
                     </div>
                     {% endfor %}
@@ -80,6 +88,7 @@
         $("#g-3").addClass("active");
         $("#g-3-2").addClass("active");
     });
+
     function do_search() {
         var key = document.getElementById("key_tag").value;
         location.href = "{{ url_for('admin.comment_search',page=1) }}?key=" + key;

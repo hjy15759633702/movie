@@ -15,6 +15,7 @@ from werkzeug.security import generate_password_hash
 from functools import wraps
 import os
 import datetime
+import json
 
 
 # 修改文件名称
@@ -234,7 +235,8 @@ def comments(page=None):
         page = 1
     page_data = Comment.query.join(Movie).join(User).filter(
         Movie.id == Comment.movie_id,
-        User.id == Comment.user_id
+        User.id == Comment.user_id,
+        User.id == session['user_id']
     ).order_by(
         Comment.addtime.desc()
     ).paginate(page=page, per_page=10)
@@ -249,6 +251,7 @@ def loginlog(page=None):
         page = 1
     page_data = Userlog.query.join(User).filter(
         User.id == Userlog.user_id,
+        User.id == session['user_id']
     ).order_by(
         Userlog.addtime.desc()
     ).paginate(page=page, per_page=10)
@@ -263,11 +266,34 @@ def moviecol(page=None):
         page = 1
     page_data = Moviecol.query.join(Movie).join(User).filter(
         Movie.id == Moviecol.movie_id,
-        User.id == Moviecol.user_id
+        User.id == Moviecol.user_id,
+        User.id == session['user_id']
     ).order_by(
         Moviecol.addtime.desc()
     ).paginate(page=page, per_page=10)
     return render_template('home/moviecol.html', page_data=page_data)
+
+
+# 添加电影收藏
+@homes.route("/moviecol/add/", methods=['GET'])
+@user_login_req
+def moviecol_add():
+    mid = request.args.get('mid', '')
+    uid = request.args.get('uid', '')
+    movelcol_count = Moviecol.query.filter(
+        db.and_(Moviecol.user_id == int(uid), Moviecol.movie_id == int(mid))
+    ).count()
+    if movelcol_count == 1:
+        data = dict(ok=0)
+    if movelcol_count == 0:
+        moviecol = Moviecol(
+            user_id=int(uid),
+            movie_id=int(mid)
+        )
+        db.session.add(moviecol)
+        db.session.commit()
+        data = dict(ok=1)
+    return json.dumps(data)
 
 
 # 上映预告
@@ -289,6 +315,7 @@ def search(page=None):
     ).order_by(
         Movie.addtime.desc()
     ).paginate(page=page, per_page=10)
+    page_data.key = key
     return render_template('home/search.html', movie_count=len(page_data.items), page_data=page_data, key=key)
 
 
@@ -298,6 +325,16 @@ def play(id=None, page=1):
     movie = Movie.query.get_or_404(int(id))
     form = CommentForm()
     movie.playnum = movie.playnum + 1
+
+    if page is None:
+        page = 1
+    page_data = Comment.query.join(Movie).join(User).filter(
+        Movie.id == Comment.movie_id,
+        User.id == Comment.user_id
+    ).order_by(
+        Comment.addtime.desc()
+    ).paginate(page=page, per_page=10)
+
     if 'user' in session and form.validate_on_submit():
         data = form.data
         comment = Comment(
@@ -312,4 +349,4 @@ def play(id=None, page=1):
         return redirect(url_for("home.play", id=movie.id, page=page))
     db.session.add(movie)
     db.session.commit()
-    return render_template('home/play.html', movie=movie, form=form)
+    return render_template('home/play.html', movie=movie, form=form, page_data=page_data)

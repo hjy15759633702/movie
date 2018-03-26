@@ -22,20 +22,27 @@
                 <li class="item cl">
                     <a>
                         <i class="avatar size-L radius">
-                            <img alt="" src="{{ url_for('static',filename='uploads/head/'+v.user.face) }}" class="img-circle" style="border:1px solid #abcdef; width: 50px; height: 50px;">
+                            {% if v.user.face %}
+                            <img alt="头像50x50" src="{{ url_for('static',filename='uploads/head/'+v.user.face) }}"
+                                 class="img-circle" style="border:1px solid #abcdef; width: 50px; height: 50px;">
+                            {% else %}
+                            <img alt="头像50x50" data-src="holder.js/50x50"
+                                 class="img-circle" style="border:1px solid #abcdef; width: 50px; height: 50px;">
+                            {% endif %}
                         </i>
                     </a>
                     <div class="comment-main">
                         <header class="comment-header">
                             <div class="comment-meta">
                                 <a class="comment-author">{{ v.user.name }}</a>
-                                评论于
-                                <time title="2016-12-07 09:12:51" datetime="2016-12-07 09:12:51">{{ v.addtime }}
-                                </time>
+                                评论于电影
+                                <a class="comment-movie" style="color: #337AB7; font-weight: bold"
+                                   href="{{ url_for('home.play',id=v.movie.id,page=1) }}">《{{ v.movie.title }}》</a>
+                                <time style="float: right; padding-right: 5px">{{ v.addtime }}</time>
                             </div>
                         </header>
                         <div class="comment-body">
-                            <p>{{ v.content }}</p>
+                            <p>{{ v.content | safe }}</p>
                         </div>
                     </div>
                 </li>

@@ -50,7 +50,13 @@
                         <tr>
                             <td class="td_bd">头像：</td>
                             <td>
-                                <img src="{{ url_for('static',filename='uploads/head/'+user.face) }}" class="img-responsive" alt="" style="width: 100px; height: 100px">
+                                {% if user.face %}
+                                <img src="{{ url_for('static',filename='uploads/head/'+user.face) }}"
+                                     class="img-responsive" alt="头像100x100" style="width: 100px; height: 100px">
+                                {% else %}
+                                <img alt="头像100x100" data-src="holder.js/100x100"
+                                     class="img-responsive" style="width: 100px; height: 100px">
+                                {% endif %}
                             </td>
                         </tr>
                         <tr>
