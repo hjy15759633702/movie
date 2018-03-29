@@ -37,10 +37,11 @@ db = SQLAlchemy(app)
 
 from app.home import homes as home_blueprint
 from app.admin import admins as admin_blueprint
+from app.api import apis as api_blueprint
 
 app.register_blueprint(home_blueprint)
 app.register_blueprint(admin_blueprint, url_prefix="/admin")
-
+app.register_blueprint(api_blueprint, url_prefix="/api")
 
 # 404页面
 @app.errorhandler(404)

@@ -15,6 +15,7 @@
         .navbar-brand > img {
             display: inline;
         }
+
         .media {
             padding: 3px;
             border: 1px solid #ccc
@@ -27,7 +28,6 @@
 <!--导航-->
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
-        <!--小屏幕导航按钮和logo-->
         <div class="navbar-header">
             <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                 <span class="icon-bar"></span>
@@ -35,39 +35,36 @@
                 <span class="icon-bar"></span>
             </button>
             <a href="{{ url_for('home.index') }}" class="navbar-brand" style="width:250px;">
-                <img src="{{ url_for('static',filename='base/images/logo.png') }}" style="height:30px;">&nbsp;微电影
+                <img src="{{ url_for('static',filename='base/images/logo.png') }}" style="height:30px;">&nbsp;小电影
             </a>
         </div>
-        <!--小屏幕导航按钮和logo-->
-        <!--导航-->
         <div class="navbar-collapse collapse">
             <form class="navbar-form navbar-left" role="search" style="margin-top:18px;">
-                <div class="form-group input-group">
-                    <input id="key_tag" type="text" class="form-control" placeholder="请输入电影名">
-                    <span class="input-group-btn">
-                        <a class="btn btn-default" onclick="do_search()"><span class="glyphicon glyphicon-search"></span>&nbsp;搜索</a>
+                <div class="form-group input-group" style="width: 350px">
+                    <input id="key_tag" type="text" class="form-control" placeholder="请输入影片名称">
+                    <span class="input-group-btn" style="width: 100px; background-color: #337AB7">
+                        <a class="btn btn-primary" onclick="do_search()" style="width: 100px"><span
+                                class="glyphicon glyphicon-search"></span>&nbsp;搜索</a>
                     </span>
                 </div>
             </form>
             <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <a class="curlink" href="{{ url_for('home.index') }}"><span class="glyphicon glyphicon-film"></span>&nbsp;电影</a>
-                </li>
-                <li>
-                    <a class="curlink" href="{{ url_for('home.login') }}"><span class="glyphicon glyphicon-log-in"></span>&nbsp;登录</a>
-                </li>
-                <li>
-                    <a class="curlink" href="{{ url_for('home.regist') }}"><span class="glyphicon glyphicon-plus"></span>&nbsp;注册</a>
-                </li>
-                <li>
-                    <a class="curlink" href="{{ url_for('home.logout') }}"><span class="glyphicon glyphicon-log-out"></span>&nbsp;退出</a>
-                </li>
-                <li>
-                    <a class="curlink" href="{{ url_for('home.user') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;会员</a>
-                </li>
+                {% if 'user' not in session %}
+                <li><a href="{{ url_for('home.user') }}" style="font-size: 18px; color: #286090">登录</a></li>
+                <li><a href="{{ url_for('home.regist') }}" style="font-size: 18px; color: #286090">注册</a></li>
+                {% else %}
+                    {% if 'user_face' in session %}
+                        <li style="height: 70px; line-height: 70px">
+                            <img class="img-circle" src="{{ url_for('static',filename='uploads/head/'+session['user_face']) }}" alt="会员头像" style="width: 50px;height: 50px; background-color: #31b131"/>
+                        </li>
+                    {% else %}
+                        <li style="height: 70px; line-height: 70px">
+                            <img class="img-circle" src="{{ url_for('static',filename='base/images/user_default.png') }}" alt="会员头像" style="width: 50px;height: 50px; background-color: #31b131"/>
+                        </li>
+                    {% endif %}
+                {% endif %}
             </ul>
         </div>
-        <!--导航-->
     </div>
 </nav>
 <!--导航-->
@@ -107,11 +104,12 @@
             effect: "fadeIn"
         });
     });
+
     function do_search() {
         var key = document.getElementById("key_tag").value;
         location.href = "{{ url_for('home.search',page=1) }}?key=" + key;
     }
 </script>
- {% block js %}{% endblock %}
+{% block js %}{% endblock %}
 </body>
 </html>

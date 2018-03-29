@@ -117,6 +117,7 @@ def login():
 
         session['user'] = data['name']
         session['user_id'] = user.id
+        session['user_face'] = user.face
         userlog = Userlog(
             user_id=session['user_id'],
             ip=request.remote_addr,
