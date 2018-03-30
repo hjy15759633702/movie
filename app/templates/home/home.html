@@ -47,19 +47,22 @@
                 </div>
             </form>
             <ul class="nav navbar-nav navbar-right">
+                <li onclick="into_index()" style="height: 70px; line-height: 70px; width: 250px; padding-left: 10px">
+                    <img src="{{ url_for('static',filename='base/images/movie_icon.png') }}" style="width: 40px;height: 40px"/>
+                    <span style="font-size: 14px; color: #777777; font-weight: bold">电影</span>
+                </li>
                 {% if 'user' not in session %}
-                <li><a href="{{ url_for('home.user') }}" style="font-size: 18px; color: #286090">登录</a></li>
+                <li><a href="{{ url_for('home.login') }}" style="font-size: 18px; color: #286090">登录</a></li>
                 <li><a href="{{ url_for('home.regist') }}" style="font-size: 18px; color: #286090">注册</a></li>
                 {% else %}
+                    <li style="height: 70px; line-height: 70px" onclick="into_user()">
                     {% if 'user_face' in session %}
-                        <li style="height: 70px; line-height: 70px">
-                            <img class="img-circle" src="{{ url_for('static',filename='uploads/head/'+session['user_face']) }}" alt="会员头像" style="width: 50px;height: 50px; background-color: #31b131"/>
-                        </li>
+                        <img class="img-circle" src="{{ url_for('static',filename='uploads/head/'+session['user_face']) }}" alt="会员头像" style="width: 50px;height: 50px"/>
                     {% else %}
-                        <li style="height: 70px; line-height: 70px">
-                            <img class="img-circle" src="{{ url_for('static',filename='base/images/user_default.png') }}" alt="会员头像" style="width: 50px;height: 50px; background-color: #31b131"/>
-                        </li>
+                        <img class="img-circle" src="{{ url_for('static',filename='base/images/user_default.png') }}" alt="会员头像" style="width: 50px;height: 50px"/>
                     {% endif %}
+                        <span style="font-size: 18px; color: #777777; font-weight: bold">{{ session['user'] }}</span>
+                    </li>
                 {% endif %}
             </ul>
         </div>
@@ -105,6 +108,12 @@
     function do_search() {
         var key = document.getElementById("key_tag").value;
         location.href = "{{ url_for('home.search',page=1) }}?key=" + key;
+    }
+    function into_user() {
+        location.href = "{{ url_for('home.user') }}";
+    }
+    function into_index() {
+        location.href = "{{ url_for('home.index') }}";
     }
 </script>
  {% block js %}{% endblock %}

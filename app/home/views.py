@@ -36,6 +36,11 @@ def user_login_req(f):
     return decorated_function
 
 
+@homes.route("/show/")
+def show():
+    return render_template('home/adtest.html')
+
+
 # 列表
 @homes.route("/")
 def index():
@@ -117,7 +122,6 @@ def login():
 
         session['user'] = data['name']
         session['user_id'] = user.id
-        session['user_face'] = user.face
         userlog = Userlog(
             user_id=session['user_id'],
             ip=request.remote_addr,
@@ -202,6 +206,8 @@ def user():
         user.email = data['email']
         user.phone = data['phone']
         user.info = data['info']
+        # 头像存在session
+        session['user_face'] = user.face
         db.session.add(user)
         db.session.commit()
         flash("会员信息修改成功！", 'ok')
