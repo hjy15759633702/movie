@@ -160,8 +160,7 @@ footer {
 }
 /*movielist*/
 #movielist {
-	background: #f8f8f8;
-	padding: 40px 0;
+	padding: 45px 0;
 	text-align: center;
 }
 
@@ -204,9 +203,6 @@ footer {
 #movietags{
     background-color:white;
 }
-/*movietags*/
-
-/*comments*/
 
 .commentList {
 	padding-left: 6px;

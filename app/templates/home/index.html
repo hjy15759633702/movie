@@ -1,38 +1,88 @@
 {% extends 'home/layout.html'%}
 {% import 'ui/home_page.html' as pg %}
 {% block css %}
-<script src="{{ url_for('static',filename='ad/js/unslider.min.js') }}"></script>
-<link rel="stylesheet" href="{{ url_for('static',filename='ad/css/main.css') }}">
-<script>
-    $(document).ready(function (e) {
-        var progress = $(".progress"), li_width = $("#b04 li").length;
-        var unslider04 = $('#b04').unslider({
-                dots: true,
-                complete: function (index) {
-                    //自己添加的，官方没有
-                    progress.animate({"width": (100 / li_width) * (index + 1) + "%"});
-                }
-            }),
+<style type="text/css" media="screen">
 
-            data04 = unslider04.data('unslider');
-        $('.unslider-arrow04').click(function () {
-            var fn = this.className.split(' ')[1];
-            data04[fn]();
-        });
-    });
-</script>
+    .slide {
+        height: 500px;
+        position: relative;
+    }
+
+    .slide ul {
+        height: 100%;
+    }
+
+    .slide li {
+        list-style: none;
+        position: absolute;
+        left: 200px;
+        top: 0;
+    }
+
+    .slide li img {
+        width: 100%;
+    }
+
+    .arraw {
+        opacity: 0;
+    }
+
+    .arraw a {
+        width: 70px;
+        height: 110px;
+        display: block;
+        position: absolute;
+        top: 50%;
+        margin-top: -55px;
+        z-index: 999;
+    }
+
+    .next {
+        right: -10px;
+        /*opacity: .5;*/
+        /*filter: alpha(opacity=50);*/
+    }
+
+    .prev {
+        left: -10px;
+    }
+</style>
 {% endblock %}
 {% block content %}
 <!--热门电影-->
 <section id="hotmovie">
-    <div class="container" style="background-color: #31b131; height: 500px">
+    <div class="container" style="height: 500px; ">
         <!--<div class="row wow fadeInRight" data-wow-delay="0.6s">-->
         <!--<div class="row">-->
         <!--<iframe class="wow fadeIn" width="100%" height="500px" frameborder=0 scrolling=no-->
         <!--src="{{ url_for('home.animation') }}"></iframe>-->
         <!--</div>-->
         <!--</div>-->
-
+        <div id="box" style="width: 100%;">
+            <div class="slide">
+                <ul>
+                    <li>
+                        <a href="#"><img src="{{ url_for('static' ,filename= 'ad/img/1.jpg')}}" alt=""></a>
+                    </li>
+                    <li>
+                        <a href="#"><img src="{{ url_for('static' ,filename= 'ad/img/2.jpg')}}" alt=""></a>
+                    </li>
+                    <li>
+                        <a href="#"><img src="{{ url_for('static' ,filename= 'ad/img/3.jpg')}}" alt=""></a>
+                    </li>
+                    <li>
+                        <a href="#"><img src="{{ url_for('static' ,filename= 'ad/img/4.jpg')}}" alt=""></a>
+                    </li>
+                    <li>
+                        <a href="#"><img src="{{ url_for('static' ,filename= 'ad/img/5.jpg')}}" alt=""></a>
+                    </li>
+                </ul>
+                <div class="arraw">
+                    <a href="javascript:;" class="next"></a>
+                    <a href="javascript:;" class='prev'></a>
+                </div>
+            </div>
+        </div>
     </div>
     </div>
 </section>
@@ -67,34 +117,12 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>上映时间</td>
-                        <td>
-                            <a href="{{ url_for('home.index') }}?tid={{ p['tid'] }}&star={{ p['star'] }}&time=1&pm={{ p['pm'] }}&cm={{ p['cm'] }}"
-                               class="label label-default" style="margin: 5px"><span
-                                    class="glyphicon glyphicon-time"></span>&nbsp;最近</span></a>
-                            <a href="{{ url_for('home.index') }}?tid={{ p['tid'] }}&star={{ p['star'] }}&time=2&pm={{ p['pm'] }}&cm={{ p['cm'] }}"
-                               class="label label-default" style="margin: 5px"><span
-                                    class="glyphicon glyphicon-time"></span>&nbsp;更早</span></a>
-                        </td>
-                    </tr>
-                    <tr>
                         <td>播放数量</td>
                         <td>
                             <a href="{{ url_for('home.index') }}?tid={{ p['tid'] }}&star={{ p['star'] }}&time={{ p['time'] }}&pm=1&cm={{ p['cm'] }}"
                                class="label label-success" style="margin: 5px"><span
                                     class="glyphicon glyphicon-arrow-down"></span>&nbsp;从高到底</span></a>
                             <a href="{{ url_for('home.index') }}?tid={{ p['tid'] }}&star={{ p['star'] }}&time={{ p['time'] }}&pm=2&cm={{ p['cm'] }}"
-                               class="label label-danger" style="margin: 5px"><span
-                                    class="glyphicon glyphicon-arrow-up"></span>&nbsp;从低到高</span></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>评论数量</td>
-                        <td>
-                            <a href="{{ url_for('home.index') }}?tid={{ p['tid'] }}&star={{ p['star'] }}&time={{ p['time'] }}&pm={{ p['pm'] }}&cm=1"
-                               class="label label-success" style="margin: 5px"><span
-                                    class="glyphicon glyphicon-arrow-down"></span>&nbsp;从高到底</span></a>
-                            <a href="{{ url_for('home.index') }}?tid={{ p['tid'] }}&star={{ p['star'] }}&time={{ p['time'] }}&pm={{ p['pm'] }}&cm=2"
                                class="label label-danger" style="margin: 5px"><span
                                     class="glyphicon glyphicon-arrow-up"></span>&nbsp;从低到高</span></a>
                         </td>
@@ -134,4 +162,181 @@
     </div>
 </section>
 <!--电影列表-->
+{% endblock %}
+{% block js %}
+<script>
+    var box = document.querySelector('#box');
+    var slide = document.querySelector('.slide');
+    var arraw = document.querySelector('.arraw');
+    var lis = document.getElementById('box').getElementsByTagName('li');
+    var json = [ //  包含了5张图片里面所有的样式
+        {
+            width: 400,
+            top: 20,
+            left: 100,
+            opacity: 20,
+            z: 2,
+            id: 1
+        },
+        {
+            width: 600,
+            top: 70,
+            left: 50,
+            opacity: 60,
+            id: 2
+        },
+        {
+            width: 800,
+            top: 100,
+            left: 200,
+            opacity: 100,
+            z: 4,
+            id: 3
+        },
+        {
+            width: 600,
+            top: 70,
+            left: 550,
+            opacity: 60,
+            z: 3,
+            id: 4
+        },
+        {
+            width: 400,
+            top: 20,
+            left: 650,
+            opacity: 20,
+            z: 2,
+            id: 5
+        }
+    ];
+    box.addEventListener('mouseover', function () {
+        animate(arraw, {
+            opacity: 100
+        });
+    });
+    box.addEventListener('mouseout', function () {
+        animate(arraw, {
+            opacity: 0
+        });
+    });
+
+    var next = document.querySelector('.next');
+    var prev = document.querySelector('.prev');
+    var timer = null;
+    var flag = true;
+    next.addEventListener('click', function () {
+        clearInterval(timer);
+        if (flag == true) {
+            move(true);
+            flag = false;
+        }
+    });
+
+    next.addEventListener('mouseleave', function () {
+        clearInterval(timer);
+        run();
+    });
+
+    prev.addEventListener('click', function () {
+        clearInterval(timer);
+        // alert('prev')
+        if (flag == true) {
+            move(false);
+            flag = false;
+        }
+    });
+    prev.addEventListener('mouseleave', function () {
+        // alert('prev')
+        // clearInterva(timer);
+        run();
+    });
+
+    move();
+    run();
+
+    function run() {
+        clearInterval(timer);
+        timer = setInterval(function () {
+            // console.log('run')
+            if (flag == true) {
+                flag = false;
+                move(true);
+            }
+        }, 1000);
+    }
+
+    function move(x) {
+        if (x != undefined) {
+            if (x) {
+                json.push(json.shift());
+            } else {
+                json.unshift(json.pop());
+            }
+            ;
+        }
+        ;
+
+        for (var i = 0; i < json.length; i++) {
+            animate(lis[i], {
+                width: json[i].width,
+                top: json[i].top,
+                left: json[i].left,
+                opacity: json[i].opacity,
+                zIndex: json[i].z
+            }, function () {
+                flag = true;
+            })
+        }
+        ;
+    }
+
+    function animate(obj, json, callback) {
+        // 先停止定时器
+        clearInterval(obj.timers);
+        obj.timers = setInterval(function () {
+            var stoped = true;
+            for (var k in json) {
+                var leader = 0;
+                if (k == 'opacity') {
+                    leader = Math.round(getStyle(obj, k) * 100) || 100;
+                } else {
+                    leader = parseInt(getStyle(obj, k)) || 0;
+                }
+                ;
+                // json[k]是目标位置
+                var step = (json[k] - leader) / 10;
+                step = step > 0 ? Math.ceil(step) : Math.floor(step);
+                leader = leader + step;
+                if (k == 'opacity') {
+                    obj.style[k] = leader / 100;
+                    obj.style['filter'] = 'alpha(opacity=' + leader + ')';
+                } else if (k == 'zIndex') {
+                    obj.style['zIndex'] = json[k];
+                } else {
+                    obj.style[k] = leader + "px";
+                }
+                if (leader != json[k]) {
+                    stoped = false;
+                }
+            }
+            ;
+            if (stoped) {
+                clearInterval(obj.timers);
+                callback && callback();
+            }
+            ;
+        }, 50);
+    };
+
+    //获取属性值
+    function getStyle(obj, attr) {
+        if (obj.currentStyle) {
+            return obj.currentStyle[attr];
+        } else {
+            return window.getComputedStyle(obj, null)[attr];
+        }
+        ;
+    };
+</script>
 {% endblock %}
