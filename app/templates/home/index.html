@@ -2,12 +2,15 @@
 {% import 'ui/home_page.html' as pg %}
 {% block css %}
 <style type="text/css" media="screen">
-
+    #box{
+        width: 100%;
+        height: 500px;
+    }
     .slide {
         height: 500px;
+        width: 100%;
         position: relative;
     }
-
     .slide ul {
         height: 100%;
     }
@@ -15,7 +18,6 @@
     .slide li {
         list-style: none;
         position: absolute;
-        left: 200px;
         top: 0;
     }
 
@@ -51,14 +53,14 @@
 {% block content %}
 <!--热门电影-->
 <section id="hotmovie">
-    <div class="container" style="height: 500px; ">
+        <!--<div class="container" style="height: 500px; background-color: #0d6aad">-->
         <!--<div class="row wow fadeInRight" data-wow-delay="0.6s">-->
         <!--<div class="row">-->
         <!--<iframe class="wow fadeIn" width="100%" height="500px" frameborder=0 scrolling=no-->
         <!--src="{{ url_for('home.animation') }}"></iframe>-->
         <!--</div>-->
         <!--</div>-->
-        <div id="box" style="width: 100%;">
+        <div id="box">
             <div class="slide">
                 <ul>
                     <li>
@@ -83,7 +85,6 @@
                 </div>
             </div>
         </div>
-    </div>
     </div>
 </section>
 <!--热门电影-->
@@ -131,25 +132,21 @@
             </div>
             {% for v in page_data.items %}
             <div class="col-md-3">
-                <div class="movielist text-center">
-                    <!--<img data-original="holder.js/262x166"
-                             class="img-responsive lazy center-block" alt="">-->
-                    <img src="{{ url_for('static',filename='uploads/movie/image/'+v.logo) }}"
-                         class="img-responsive center-block" alt="" style="width: 262px; height: 166px;">
-                    <div class="text-left" style="margin-left:auto;margin-right:auto;width:210px;">
-                        <span style="color:#999;font-style: italic;">{{ v.title }}</span><br>
-                        <div>
-                            {% for val in range(1,v.star+1) %}
-                            <span class="glyphicon glyphicon-star" style="color:#FFD119"></span>
-                            {% endfor %}
-                            {% for val in range(1,5-v.star+1) %}
-                            <span class="glyphicon glyphicon-star-empty" style="color:#FFD119"></span>
-                            {% endfor %}
-                        </div>
+                <div class="movie_content" >
+                    <img alt="{{ v.title }}" width="100%" height="100%" src="{{ url_for('static',filename='uploads/movie/image/'+v.logo) }}">
+                    <span class="movie_title" >{{ v.title }}</span>
+                    <img class="movie_play" alt="{{ v.title }}" width="40px" height="40px" src="{{ url_for('static',filename='base/images/play_icon.png') }}">
+                    <div class="movie_playNum">
+                        <img alt="{{ v.title }}" width="20px" height="20px" src="{{ url_for('static',filename='base/images/play_num_icon.png') }}">
+                        <span>{{ v.playnum }}</span>
                     </div>
-                    <a href="{{ url_for('home.play', id=1, page=1) }}" class="btn btn-primary" target="_blank"
-                       role="button"><span
-                            class="glyphicon glyphicon-play"></span>&nbsp;播放</a>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-md-3" style="width: 100%; height: 300px;">
+                <div style="width: 380px; height: 80px; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);">
+                    <img src="{{ url_for('static',filename='base/images/no_content.png') }}" style="width: 80px; height: 80px;float: left">
+                    <span style="color: #bfbfbf; float: left; padding-left: 10px; line-height: 80px; font-weight: bold">当前影片内容较少，请观看其他内容！</span>
                 </div>
             </div>
             {% endfor %}
@@ -158,6 +155,40 @@
                 {{ pg.page(page_data,'home.index') }}
             </div>
             {% endif %}
+            <div class="col-md-3" style="width: 100%; height: 300px;">
+                <div style="width: 100%; height: 50px; border-bottom:2px solid #ff0055; margin-bottom: 15px">
+                    <img src="{{ url_for('static',filename='base/images/recommend.png') }}" style="width: 30px; height: 30px; float: left; margin-top: 10px">
+                    <span style="font-size: 18px; color: #ff0055; float: left; padding-left: 10px; line-height: 50px; font-weight: bold">强力推荐</span>
+                </div>
+                {% for v in page_data.items %}
+                <div class="col-md-3">
+                    <div class="movielist text-center">
+                        <img src="{{ url_for('static',filename='uploads/movie/image/'+v.logo) }}"
+                             class="img-responsive center-block" alt="{{ v.title }}" width="262px" height="166px">
+                        <div class="text-left" style="margin-left:auto; margin-right: auto;width:210px;">
+                            <span style="color:#999;font-style: italic;">{{ v.title }}</span><br>
+                            <div>
+                            {% for val in range(1,v.star+1) %}
+                            <span class="glyphicon glyphicon-star" style="color:#FFD119"></span>
+                            {% endfor %}
+                            {% for val in range(1,5-v.star+1) %}
+                            <span class="glyphicon glyphicon-star-empty" style="color:#FFD119"></span>
+                            {% endfor %}
+                        </div>
+                        </div>
+                        <a href="{{ url_for('home.play', id=1, page=1) }}" class="btn btn-primary" target="_blank"
+                           role="button"><span class="glyphicon glyphicon-play"></span>&nbsp;播放</a>
+                    </div>
+                </div>
+                {% else %}
+                <div class="col-md-3" style="width: 100%; height: 300px;">
+                    <div style="width: 380px; height: 80px; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);">
+                        <img src="{{ url_for('static',filename='base/images/no_content.png') }}" style="width: 80px; height: 80px;float: left">
+                        <span style="color: #bfbfbf; float: left; padding-left: 10px; line-height: 80px; font-weight: bold">当前影片内容较少，请观看其他内容！</span>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
         </div>
     </div>
 </section>
@@ -169,46 +200,12 @@
     var slide = document.querySelector('.slide');
     var arraw = document.querySelector('.arraw');
     var lis = document.getElementById('box').getElementsByTagName('li');
-    var json = [ //  包含了5张图片里面所有的样式
-        {
-            width: 400,
-            top: 20,
-            left: 100,
-            opacity: 20,
-            z: 2,
-            id: 1
-        },
-        {
-            width: 600,
-            top: 70,
-            left: 50,
-            opacity: 60,
-            id: 2
-        },
-        {
-            width: 800,
-            top: 100,
-            left: 200,
-            opacity: 100,
-            z: 4,
-            id: 3
-        },
-        {
-            width: 600,
-            top: 70,
-            left: 550,
-            opacity: 60,
-            z: 3,
-            id: 4
-        },
-        {
-            width: 400,
-            top: 20,
-            left: 650,
-            opacity: 20,
-            z: 2,
-            id: 5
-        }
+    var json = [
+        { width: 400, top: 10, left: 100, opacity: 40, z: 2, id: 1 },
+        { width: 600, top: 40, left: 150, opacity: 70, z: 3, id: 2},
+        { width: 800, top: 70, left: 200, opacity: 100, z: 4, id: 3 },
+        { width: 600, top: 40, left: 450, opacity: 70, z: 3, id: 4 },
+        { width: 400, top: 10, left: 700, opacity: 40, z: 2, id: 5 }
     ];
     box.addEventListener('mouseover', function () {
         animate(arraw, {
@@ -240,15 +237,12 @@
 
     prev.addEventListener('click', function () {
         clearInterval(timer);
-        // alert('prev')
         if (flag == true) {
             move(false);
             flag = false;
         }
     });
     prev.addEventListener('mouseleave', function () {
-        // alert('prev')
-        // clearInterva(timer);
         run();
     });
 
@@ -258,12 +252,11 @@
     function run() {
         clearInterval(timer);
         timer = setInterval(function () {
-            // console.log('run')
             if (flag == true) {
                 flag = false;
                 move(true);
             }
-        }, 1000);
+        }, 3000);
     }
 
     function move(x) {

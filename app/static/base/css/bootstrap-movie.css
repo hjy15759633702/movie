@@ -158,7 +158,7 @@ footer {
 	text-align: center;
 	padding: 20px;
 }
-/*movielist*/
+
 #movielist {
 	padding: 45px 0;
 	text-align: center;
@@ -193,7 +193,86 @@ footer {
 	background: #2fa4e7;
 	color: #fff;
 }
-/*movielist*/
+
+.movie_content{
+	background-color: #f0f0f0;
+	position: relative;
+	width: 262px;
+	height: 200px;
+}
+
+.movie_title{
+	color:#fff;
+	position:absolute;
+	left:0px;
+	bottom:0px;
+	height:30px;
+	background:#000;
+	display:block;
+	zoom:1;
+	filter:alpha(opacity=50);
+	opacity:0.5;
+	width:100%;
+	line-height:30px;
+	font-weight: bold;
+	font-size: 14px;
+	text-align: left;
+	padding-left: 10px;
+}
+
+.movie_title:hover{
+	color:#fff;
+	position:absolute;
+	left:0px;
+	bottom:0px;
+	height:30px;
+	background:#000;
+	display:block;
+	width:100%;
+	line-height:30px;
+	font-weight: bold;
+	font-size: 16px;
+	text-align: left;
+	padding-left: 10px;
+}
+
+.movie_play{
+	position:absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	margin:auto;
+	display:block;
+	filter:alpha(opacity=0);
+	opacity:0;
+}
+
+.movie_play:hover{
+	position:absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	margin:auto;
+	display:block;
+	filter:alpha(opacity=1);
+	opacity:1;
+}
+
+.movie_playNum{
+	position:absolute;
+	height: 20px;
+	width: 100%;
+	left: 0;
+	top: 0;
+	display:block;
+}
+
+.movie_playNum span{
+	color: #1afa29;
+	font-size: 12px;
+}
 
 /*movietags*/
 #movietags .label{
@@ -327,6 +406,3 @@ footer {
 	margin-left: auto;
 	margin-right: 2px
 }
-
-
-/*comments*/
