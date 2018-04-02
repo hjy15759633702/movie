@@ -96,7 +96,13 @@ def index():
         pm=pm,
         cm=cm
     )
-    return render_template('home/index.html', tags=tags, p=p, page_data=page_data, page_count=len(page_data.items))
+    # 推荐列表
+    rec_page_data = Movie.query.order_by(
+        Movie.playnum.desc(),
+        Movie.star.desc(),
+    ).limit(9).offset(0)
+
+    return render_template('home/index.html', tags=tags, p=p, page_data=page_data, rec_page_data=rec_page_data, page_count=len(page_data.items))
 
 
 # 登录

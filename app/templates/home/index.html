@@ -134,66 +134,60 @@
             <div class="col-md-3">
                 <div class="movie_content" >
                     <img alt="{{ v.title }}" width="100%" height="100%" src="{{ url_for('static',filename='uploads/movie/image/'+v.logo) }}">
-                    <span class="movie_title" >{{ v.title }}</span>
-                    <img class="movie_play" alt="{{ v.title }}" width="40px" height="40px" src="{{ url_for('static',filename='base/images/play_icon.png') }}">
-                    <div class="movie_playNum">
-                        <img alt="{{ v.title }}" width="20px" height="20px" src="{{ url_for('static',filename='base/images/play_num_icon.png') }}">
-                        <span>{{ v.playnum }}</span>
+                    <a href="{{ url_for('home.play', id=v.id, page=1) }}" target="_blank"><img class="movie_play" alt="{{ v.title }}" width="40px" height="40px" src="{{ url_for('static',filename='base/images/play_icon.png') }}"></a>
+                    <div class="movie_bottom">
+                        <span class="movie_title" >{{ v.title }}</span>
+                        <div class="movie_playNum">
+                            <img alt="{{ v.title }}" width="20px" height="20px" src="{{ url_for('static',filename='base/images/play_num_icon.png') }}">
+                            <span>{{ v.playnum }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
             {% else %}
-            <div class="col-md-3" style="width: 100%; height: 300px;">
-                <div style="width: 380px; height: 80px; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);">
-                    <img src="{{ url_for('static',filename='base/images/no_content.png') }}" style="width: 80px; height: 80px;float: left">
-                    <span style="color: #bfbfbf; float: left; padding-left: 10px; line-height: 80px; font-weight: bold">当前影片内容较少，请观看其他内容！</span>
-                </div>
-            </div>
+                {% include 'ui/nodata_page.html' %}
             {% endfor %}
+
             {% if page_count > 0 %}
             <div class="col-md-12">
                 {{ pg.page(page_data,'home.index') }}
             </div>
             {% endif %}
-            <div class="col-md-3" style="width: 100%; height: 300px;">
+
+            {% if rec_page_data %}
+            <div class="col-md-3" style="width: 100%;">
                 <div style="width: 100%; height: 50px; border-bottom:2px solid #ff0055; margin-bottom: 15px">
                     <img src="{{ url_for('static',filename='base/images/recommend.png') }}" style="width: 30px; height: 30px; float: left; margin-top: 10px">
                     <span style="font-size: 18px; color: #ff0055; float: left; padding-left: 10px; line-height: 50px; font-weight: bold">强力推荐</span>
                 </div>
-                {% for v in page_data.items %}
-                <div class="col-md-3">
-                    <div class="movielist text-center">
-                        <img src="{{ url_for('static',filename='uploads/movie/image/'+v.logo) }}"
-                             class="img-responsive center-block" alt="{{ v.title }}" width="262px" height="166px">
-                        <div class="text-left" style="margin-left:auto; margin-right: auto;width:210px;">
-                            <span style="color:#999;font-style: italic;">{{ v.title }}</span><br>
+                {% for v in rec_page_data %}
+                <div class="col-md-4">
+                    <div class="movie_recommend">
+                        <img src="{{ url_for('static',filename='uploads/movie/image/'+v.logo) }}" alt="{{ v.title }}" width="100%" height="300px">
+                        <span class="recommend_title" >{{ v.title }}</span>
+                        <div class="movie_star">
                             <div>
-                            {% for val in range(1,v.star+1) %}
-                            <span class="glyphicon glyphicon-star" style="color:#FFD119"></span>
-                            {% endfor %}
-                            {% for val in range(1,5-v.star+1) %}
-                            <span class="glyphicon glyphicon-star-empty" style="color:#FFD119"></span>
-                            {% endfor %}
+                                {% for val in range(1,v.star+1) %}
+                                <span class="glyphicon glyphicon-star" style="color:#FFD119"></span>
+                                {% endfor %}
+                                {% for val in range(1,5-v.star+1) %}
+                                <span class="glyphicon glyphicon-star-empty" style="color:#FFD119"></span>
+                                {% endfor %}
+                            </div>
                         </div>
-                        </div>
-                        <a href="{{ url_for('home.play', id=1, page=1) }}" class="btn btn-primary" target="_blank"
-                           role="button"><span class="glyphicon glyphicon-play"></span>&nbsp;播放</a>
+                        <a href="{{ url_for('home.play', id=v.id, page=1) }}" target="_blank">
+                            <img class="rec_movie_play" alt="{{ v.title }}" width="40px" height="40px" src="{{ url_for('static',filename='base/images/rec_play_icon.png') }}"></a>
                     </div>
                 </div>
-                {% else %}
-                <div class="col-md-3" style="width: 100%; height: 300px;">
-                    <div style="width: 380px; height: 80px; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);">
-                        <img src="{{ url_for('static',filename='base/images/no_content.png') }}" style="width: 80px; height: 80px;float: left">
-                        <span style="color: #bfbfbf; float: left; padding-left: 10px; line-height: 80px; font-weight: bold">当前影片内容较少，请观看其他内容！</span>
-                    </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
             </div>
+            {% endif %}
         </div>
     </div>
 </section>
 <!--电影列表-->
 {% endblock %}
+
 {% block js %}
 <script>
     var box = document.querySelector('#box');

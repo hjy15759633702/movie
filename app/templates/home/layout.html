@@ -72,12 +72,11 @@
 </nav>
 <!--导航-->
 <!--内容-->
-<div class="container" style="margin-top:76px">
+<div class="container" style="margin-top:76px;">
     {% block content %}
     {% endblock %}
 </div>
 <!--内容-->
-<!--底部-->
 <footer>
     <div class="container">
         <div class="row">
@@ -89,7 +88,6 @@
         </div>
     </div>
 </footer>
-<!--底部-->
 <script src="{{ url_for('static',filename='base/js/jquery.min.js') }}"></script>
 <script src="{{ url_for('static',filename='base/js/bootstrap.min.js') }}"></script>
 <script src="{{ url_for('static',filename='base/js/jquery.singlePageNav.min.js') }}"></script>
