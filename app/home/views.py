@@ -135,7 +135,7 @@ def login():
         db.session.add(userlog)
         db.session.commit()
         return redirect(request.args.get('next') or url_for("home.user"))
-    return render_template('home/login.html', form=form)
+    return render_template('home/new_login.html', form=form)
 
 
 # 退出

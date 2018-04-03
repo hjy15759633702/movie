@@ -2,15 +2,17 @@
 {% import 'ui/home_page.html' as pg %}
 {% block css %}
 <style type="text/css" media="screen">
-    #box{
+    #box {
         width: 100%;
         height: 500px;
     }
+
     .slide {
         height: 500px;
         width: 100%;
         position: relative;
     }
+
     .slide ul {
         height: 100%;
     }
@@ -53,38 +55,38 @@
 {% block content %}
 <!--热门电影-->
 <section id="hotmovie">
-        <!--<div class="container" style="height: 500px; background-color: #0d6aad">-->
-        <!--<div class="row wow fadeInRight" data-wow-delay="0.6s">-->
-        <!--<div class="row">-->
-        <!--<iframe class="wow fadeIn" width="100%" height="500px" frameborder=0 scrolling=no-->
-        <!--src="{{ url_for('home.animation') }}"></iframe>-->
-        <!--</div>-->
-        <!--</div>-->
-        <div id="box">
-            <div class="slide">
-                <ul>
-                    <li>
-                        <a href="#"><img src="{{ url_for('static' ,filename= 'ad/img/1.jpg')}}" alt=""></a>
-                    </li>
-                    <li>
-                        <a href="#"><img src="{{ url_for('static' ,filename= 'ad/img/2.jpg')}}" alt=""></a>
-                    </li>
-                    <li>
-                        <a href="#"><img src="{{ url_for('static' ,filename= 'ad/img/3.jpg')}}" alt=""></a>
-                    </li>
-                    <li>
-                        <a href="#"><img src="{{ url_for('static' ,filename= 'ad/img/4.jpg')}}" alt=""></a>
-                    </li>
-                    <li>
-                        <a href="#"><img src="{{ url_for('static' ,filename= 'ad/img/5.jpg')}}" alt=""></a>
-                    </li>
-                </ul>
-                <div class="arraw">
-                    <a href="javascript:;" class="next"></a>
-                    <a href="javascript:;" class='prev'></a>
-                </div>
+    <!--<div class="container" style="height: 500px; background-color: #0d6aad">-->
+    <!--<div class="row wow fadeInRight" data-wow-delay="0.6s">-->
+    <!--<div class="row">-->
+    <!--<iframe class="wow fadeIn" width="100%" height="500px" frameborder=0 scrolling=no-->
+    <!--src="{{ url_for('home.animation') }}"></iframe>-->
+    <!--</div>-->
+    <!--</div>-->
+    <div id="box">
+        <div class="slide">
+            <ul>
+                <li>
+                    <a href="#"><img src="{{ url_for('static' ,filename= 'ad/img/1.jpg')}}" alt=""></a>
+                </li>
+                <li>
+                    <a href="#"><img src="{{ url_for('static' ,filename= 'ad/img/2.jpg')}}" alt=""></a>
+                </li>
+                <li>
+                    <a href="#"><img src="{{ url_for('static' ,filename= 'ad/img/3.jpg')}}" alt=""></a>
+                </li>
+                <li>
+                    <a href="#"><img src="{{ url_for('static' ,filename= 'ad/img/4.jpg')}}" alt=""></a>
+                </li>
+                <li>
+                    <a href="#"><img src="{{ url_for('static' ,filename= 'ad/img/5.jpg')}}" alt=""></a>
+                </li>
+            </ul>
+            <div class="arraw">
+                <a href="javascript:;" class="next"></a>
+                <a href="javascript:;" class='prev'></a>
             </div>
         </div>
+    </div>
     </div>
 </section>
 <!--热门电影-->
@@ -132,20 +134,26 @@
             </div>
             {% for v in page_data.items %}
             <div class="col-md-3">
-                <div class="movie_content" >
-                    <img alt="{{ v.title }}" width="100%" height="100%" src="{{ url_for('static',filename='uploads/movie/image/'+v.logo) }}">
-                    <a href="{{ url_for('home.play', id=v.id, page=1) }}" target="_blank"><img class="movie_play" alt="{{ v.title }}" width="40px" height="40px" src="{{ url_for('static',filename='base/images/play_icon.png') }}"></a>
+                <div class="movie_content">
+                    <img alt="{{ v.title }}" width="100%" height="100%"
+                         src="{{ url_for('static',filename='uploads/movie/image/'+v.logo) }}">
+                    <a href="{{ url_for('home.play', id=v.id, page=1) }}" target="_blank"><img class="movie_play"
+                                                                                               alt="{{ v.title }}"
+                                                                                               width="40px"
+                                                                                               height="40px"
+                                                                                               src="{{ url_for('static',filename='base/images/play_icon.png') }}"></a>
                     <div class="movie_bottom">
-                        <span class="movie_title" >{{ v.title }}</span>
+                        <span class="movie_title">{{ v.title }}</span>
                         <div class="movie_playNum">
-                            <img alt="{{ v.title }}" width="20px" height="20px" src="{{ url_for('static',filename='base/images/play_num_icon.png') }}">
+                            <img alt="{{ v.title }}" width="20px" height="20px"
+                                 src="{{ url_for('static',filename='base/images/play_num_icon.png') }}">
                             <span>{{ v.playnum }}</span>
                         </div>
                     </div>
                 </div>
             </div>
             {% else %}
-                {% include 'ui/nodata_page.html' %}
+            {% include 'ui/nodata_page.html' %}
             {% endfor %}
 
             {% if page_count > 0 %}
@@ -157,14 +165,16 @@
             {% if rec_page_data %}
             <div class="col-md-3" style="width: 100%;">
                 <div style="width: 100%; height: 50px; border-bottom:2px solid #ff0055; margin-bottom: 15px">
-                    <img src="{{ url_for('static',filename='base/images/recommend.png') }}" style="width: 30px; height: 30px; float: left; margin-top: 10px">
+                    <img src="{{ url_for('static',filename='base/images/recommend.png') }}"
+                         style="width: 30px; height: 30px; float: left; margin-top: 10px">
                     <span style="font-size: 18px; color: #ff0055; float: left; padding-left: 10px; line-height: 50px; font-weight: bold">强力推荐</span>
                 </div>
                 {% for v in rec_page_data %}
                 <div class="col-md-4">
                     <div class="movie_recommend">
-                        <img src="{{ url_for('static',filename='uploads/movie/image/'+v.logo) }}" alt="{{ v.title }}" width="100%" height="300px">
-                        <span class="recommend_title" >{{ v.title }}</span>
+                        <img src="{{ url_for('static',filename='uploads/movie/image/'+v.logo) }}" alt="{{ v.title }}"
+                             width="100%" height="300px">
+                        <span class="recommend_title">{{ v.title }}</span>
                         <div class="movie_star">
                             <div>
                                 {% for val in range(1,v.star+1) %}
@@ -176,7 +186,8 @@
                             </div>
                         </div>
                         <a href="{{ url_for('home.play', id=v.id, page=1) }}" target="_blank">
-                            <img class="rec_movie_play" alt="{{ v.title }}" width="40px" height="40px" src="{{ url_for('static',filename='base/images/rec_play_icon.png') }}"></a>
+                            <img class="rec_movie_play" alt="{{ v.title }}" width="40px" height="40px"
+                                 src="{{ url_for('static',filename='base/images/rec_play_icon.png') }}"></a>
                     </div>
                 </div>
                 {% endfor %}
@@ -195,11 +206,11 @@
     var arraw = document.querySelector('.arraw');
     var lis = document.getElementById('box').getElementsByTagName('li');
     var json = [
-        { width: 400, top: 10, left: 100, opacity: 40, z: 2, id: 1 },
-        { width: 600, top: 40, left: 150, opacity: 70, z: 3, id: 2},
-        { width: 800, top: 70, left: 200, opacity: 100, z: 4, id: 3 },
-        { width: 600, top: 40, left: 450, opacity: 70, z: 3, id: 4 },
-        { width: 400, top: 10, left: 700, opacity: 40, z: 2, id: 5 }
+        {width: 400, top: 10, left: 100, opacity: 40, z: 2, id: 1},
+        {width: 600, top: 40, left: 150, opacity: 70, z: 3, id: 2},
+        {width: 800, top: 70, left: 200, opacity: 100, z: 4, id: 3},
+        {width: 600, top: 40, left: 450, opacity: 70, z: 3, id: 4},
+        {width: 400, top: 10, left: 700, opacity: 40, z: 2, id: 5}
     ];
     box.addEventListener('mouseover', function () {
         animate(arraw, {
