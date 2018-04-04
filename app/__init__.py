@@ -8,6 +8,7 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 import os
+import redis
 
 HOSTNAME = '127.0.0.1'
 PORT = '3306'
@@ -33,6 +34,7 @@ app.config["UP_DIR"] = os.path.join(os.path.abspath(os.path.dirname(__file__)), 
 app.config["UP_DIR_PREVIEW"] = os.path.join(os.path.abspath(os.path.dirname(__file__)), "static/uploads/preview/")
 
 app.debug = True
+
 db = SQLAlchemy(app)
 
 from app.home import homes as home_blueprint

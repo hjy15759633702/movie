@@ -35,12 +35,6 @@ def user_login_req(f):
 
     return decorated_function
 
-
-@homes.route("/show/")
-def show():
-    return render_template('home/adtest.html')
-
-
 # 列表
 @homes.route("/")
 def index():
