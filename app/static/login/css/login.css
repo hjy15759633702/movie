@@ -42,3 +42,27 @@ body{
     height: 50px;
     line-height: 50px;
 }
+
+.login_form{
+    margin:20px 10px 0px 10px;
+}
+
+.login_login{
+    height: 40px;
+    width: 200px;
+    margin: 0px auto;
+}
+
+.login_line{
+    height: 1px;
+    background-color: #f0f0f0;
+    width: 100%;
+}
+
+.login_regist{
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+    font-size: 14px;
+    color: #1c2529;
+}

@@ -21,8 +21,9 @@ class LoginForm(FlaskForm):
         ],
         description="账号",
         render_kw={
-            "class": "form-control input-lg",
+            "class": "form-control",
             "placeholder": "账号",
+            "id": "name"
         }
     )
     pwd = PasswordField(
@@ -32,14 +33,15 @@ class LoginForm(FlaskForm):
         ],
         description="密码",
         render_kw={
-            "class": "form-control input-lg",
+            "class": "form-control",
             "placeholder": "密码",
+            "id": "inputPassword3"
         }
     )
     submit = SubmitField(
         "登录",
         render_kw={
-            "class": "btn btn-lg btn-success btn-block"
+            "class": "btn btn-primary btn-block"
         }
     )
 

@@ -17,37 +17,57 @@
         <img class="login_logo" src="{{ url_for('static',filename='base/images/logo.png') }}">
         <span class="login_title_text">会员登录</span>
     </div>
-    <form class="form-horizontal">
+    <div class="login_form">
+        {% for msg in get_flashed_messages(category_filter=['ok']) %}
+        <div class="alert alert-success alert-dismissible">
+            {{ msg }}
+        </div>
+        {% endfor %}
+        {% for msg in get_flashed_messages(category_filter=['err']) %}
+        <div class="alert alert-danger alert-dismissible">
+            {{ msg }}
+        </div>
+        {% endfor %}
+        <form class="form-horizontal" method="post">
         <div class="form-group">
-            <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+            <label for="name" class="col-sm-2 control-label">{{ form.name.label }}</label>
             <div class="col-sm-10">
-                <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                {{ form.name }}
             </div>
+            {% for err in form.name.errors %}
+            <div class="col-md-12" style="padding-left: 16.66666667%;">
+                <font style="color: red; font-size: 10px; padding-left: 15px">{{ err }}</font>
+            </div>
+            {% endfor %}
         </div>
         <div class="form-group">
-            <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+            <label for="inputPassword3" class="col-sm-2 control-label" >{{ form.pwd.label }}</label>
             <div class="col-sm-10">
-                <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                {{ form.pwd }}
+            </div>
+            {% for err in form.pwd.errors %}
+            <div class="col-md-12" style="padding-left: 16.66666667%;">
+                <font style="color: red; font-size: 10px; padding-left: 15px">{{ err }}</font>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="form-group" style="margin-top: 30px;">
+            <div class="login_login">
+                {{ form.submit }}
+                {{ form.csrf_token }}
             </div>
         </div>
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox"> Remember me
-                    </label>
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-default">Sign in</button>
-            </div>
+        <div class="login_line"></div>
+        <div class="login_regist">
+            还没有小电影会员帐号？ <a href="{{ url_for('home.regist') }}">立即注册</a>
         </div>
     </form>
+    </div>
 </div>
 <script>
-
+//$(document).ready(function(){
+//    $("body").css("background-img","url("{{ url_for('static',filename='login/img/3.jpg') }}")");
+//});
 </script>
 </body>
 </html>
