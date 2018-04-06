@@ -1,0 +1,57 @@
+body{
+    width: 100%;
+    height: 100%;
+    background-color: #3B4C54;
+}
+
+.regist_content{
+    position: absolute;
+    width: 350px;
+    height: 700px;
+    background-color: #fff;
+    left: 0;
+    right: 0;
+    margin: 0px auto;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 5px;
+    box-shadow: 0 0 10px #000;
+    padding: 5px;
+}
+
+.regist_first{
+    width: 350px;
+    height: 50px;
+}
+
+.regist_title{
+    height: 50px;
+    width: 180px;
+    float: left;
+}
+
+.regist_close{
+    height: 50px;
+    width: 50px;
+    float: right;
+}
+
+.regist_x{
+    height: 30px;
+    width: 30px;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.regist_title_text{
+    font-size: 24px;
+    font-weight: bold;
+    float: left;
+}
+
+.regist_logo{
+    width: 28px;
+    height: 28px;
+    float: left;
+    margin-right: 5px;
+}

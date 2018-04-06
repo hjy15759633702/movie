@@ -48,9 +48,16 @@
                 </li>
                 {% endfor %}
             </ul>
+
+            {% if page_count >0 %}
             <div class="col-md-12 text-center">
                 {{ pg.page(page_data,'home.comments') }}
             </div>
+            {% else %}
+            <div class="col-md-3" style="width: 100%; height: 300px;">
+                <span style="color: #bfbfbf; padding-left: 10px; line-height: 80px; font-weight: bold;">当前无评论记录！</span>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>

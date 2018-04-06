@@ -9,9 +9,9 @@ from flask import request, jsonify, current_app
 from app.api import apis
 from functools import wraps
 from app.models import User
-import redis
-
-redis_store = redis.Redis(host='127.0.0.1', port=6070, db=4, password='hjy')
+# import redis
+#
+# redis_store = redis.Redis(host='127.0.0.1', port=6070, db=4, password='hjy')
 
 def login_check(f):
     @wraps(f)

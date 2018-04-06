@@ -13,9 +13,14 @@
 
 <body>
 <div class="login_content">
-    <div class="login_title">
-        <img class="login_logo" src="{{ url_for('static',filename='base/images/logo.png') }}">
-        <span class="login_title_text">会员登录</span>
+    <div class="login_first">
+        <div class="login_title">
+            <img class="login_logo" src="{{ url_for('static',filename='base/images/logo.png') }}">
+            <span class="login_title_text">会员登录</span>
+        </div>
+        <div class="login_close">
+            <a href="#" onclick="javascript :history.back(-1);" ><img class="login_x" src="{{ url_for('static',filename='base/images/x.png') }}"></a>
+        </div>
     </div>
     <div class="login_form">
         {% for msg in get_flashed_messages(category_filter=['ok']) %}

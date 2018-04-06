@@ -156,9 +156,9 @@ def regist():
         )
         db.session.add(user)
         db.session.commit()
-        flash("会员注册成功！", 'ok')
-        return redirect(url_for("home.regist"))
-    return render_template('home/regist.html', form=form)
+        # flash("会员注册成功！", 'ok')
+        return redirect(url_for("home.login"))
+    return render_template('home/new_regist.html', form=form)
 
 
 # 会员中心
@@ -247,7 +247,7 @@ def comments(page=None):
     ).order_by(
         Comment.addtime.desc()
     ).paginate(page=page, per_page=10)
-    return render_template('home/comments.html', page_data=page_data)
+    return render_template('home/comments.html', page_data=page_data, page_count=len(page_data.items))
 
 
 # 登录日志
@@ -278,7 +278,7 @@ def moviecol(page=None):
     ).order_by(
         Moviecol.addtime.desc()
     ).paginate(page=page, per_page=10)
-    return render_template('home/moviecol.html', page_data=page_data)
+    return render_template('home/moviecol.html', page_data=page_data, page_count=len(page_data.items))
 
 
 # 添加电影收藏

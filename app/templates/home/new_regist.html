@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1 , user-scalable=no">
+    <title>小电影</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='admin/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='regist/css/regist.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='base/css/bootstrap-movie.css') }}">
+</head>
+
+<body>
+<div class="regist_content">
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel">
+            <div class="regist_first">
+                <div class="panel-heading regist_title">
+                    <img class="regist_logo" src="{{ url_for('static',filename='base/images/logo.png') }}">
+                    <span class="regist_title_text">会员注册</span>
+                </div>
+                <div class="regist_close">
+                    <a href="#" onclick="javascript :history.back(-1);" ><img class="regist_x" src="{{ url_for('static',filename='base/images/x.png') }}"></a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <form role="form" , method="post">
+                    <fieldset>
+                        <!--{% for msg in get_flashed_messages(category_filter=['ok']) %}-->
+                        <!--<div class="alert alert-success alert-dismissible">-->
+                            <!--{{ msg }}-->
+                        <!--</div>-->
+                        <!--{% endfor %}-->
+                        <!--{% for msg in get_flashed_messages(category_filter=['err']) %}-->
+                        <!--<div class="alert alert-danger alert-dismissible">-->
+                            <!--{{ msg }}-->
+                        <!--</div>-->
+                        <!--{% endfor %}-->
+                        <div class="form-group">
+                            <label for="input_name"><span class="glyphicon glyphicon-user"></span>&nbsp;{{
+                                form.name.label }}</label>
+                            {{ form.name }}
+                            {% for err in form.name.errors %}
+                            <div>
+                                <span style="color: red; font-size: 10px;">{{ err }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-12" id="error_name"></div>
+                        <div class="form-group">
+                            <label for="input_email"><span class="glyphicon glyphicon-envelope"></span>&nbsp;{{
+                                form.email.label }}</label>
+                            {{ form.email }}
+                            {% for err in form.email.errors %}
+                            <div>
+                                <font style="color: red; font-size: 10px">{{ err }}</font>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-12" id="error_email"></div>
+                        <div class="form-group">
+                            <label for="input_phone"><span class="glyphicon glyphicon-phone"></span>&nbsp;{{
+                                form.phone.label }}</label>
+                            {{ form.phone }}
+                            {% for err in form.phone.errors %}
+                            <div>
+                                <font style="color: red; font-size: 10px">{{ err }}</font>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-12" id="error_phone"></div>
+                        <div class="form-group">
+                            <label for="input_password"><span class="glyphicon glyphicon-lock"></span>&nbsp;{{
+                                form.pwd.label }}</label>
+                            {{ form.pwd }}
+                            {% for err in form.pwd.errors %}
+                            <div>
+                                <font style="color: red; font-size: 10px">{{ err }}</font>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-12" id="error_password"></div>
+                        <div class="form-group">
+                            <label for="input_repassword"><span
+                                    class="glyphicon glyphicon-lock"></span>&nbsp;{{ form.repwd.label }}</label>
+                            {{ form.repwd }}
+                            {% for err in form.repwd.errors %}
+                            <div>
+                                <font style="color: red; font-size: 10px">{{ err }}</font>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-12" id="error_repassword"></div>
+                        {{ form.submit }}
+                        {{ form.csrf_token }}
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+
+</script>
+</body>
+</html>

@@ -110,7 +110,7 @@ class RegistForm(FlaskForm):
     submit = SubmitField(
         "注册",
         render_kw={
-            "class": "btn btn-lg btn-success btn-block"
+            "class": "btn btn-primary btn-block"
         }
     )
 
@@ -193,7 +193,7 @@ class UserdetialForm(FlaskForm):
     submit = SubmitField(
         '保存修改',
         render_kw={
-            "class": "btn btn-success"
+            "class": "btn btn-primary"
         }
     )
 
@@ -226,7 +226,7 @@ class PwdForm(FlaskForm):
     submit = SubmitField(
         "修改密码",
         render_kw={
-            "class": "btn btn-success"
+            "class": "btn btn-primary"
         }
     )
 
@@ -256,7 +256,7 @@ class CommentForm(FlaskForm):
     submit = SubmitField(
         "提交评论",
         render_kw={
-            "class": "btn btn-success",
+            "class": "btn btn-primary",
             "id": "btn-sub"
         }
     )

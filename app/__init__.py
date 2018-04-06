@@ -8,7 +8,6 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 import os
-import redis
 
 HOSTNAME = '127.0.0.1'
 PORT = '3306'
